@@ -1,8 +1,8 @@
 import React from "react";
 import { useCart } from "../context/CartContext";
 import { Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-// Optional fallback if image is missing (won’t be used with local imports)
 const defaultImage = "https://via.placeholder.com/64";
 
 const Cart = () => {
@@ -14,11 +14,24 @@ const Cart = () => {
     decreaseQuantity,
   } = useCart();
 
-  const getTotalPrice = () => {
-    return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
+  const navigate = useNavigate();
+
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const gst = subtotal * 0.09;
+  const sgst = subtotal * 0.09;
+  const discount = subtotal * 0.05;
+  const couponDiscount = 50;
+  const total = subtotal + gst + sgst - discount - couponDiscount;
+
+  const handlePlaceOrder = () => {
+    if (cartItems.length > 0) {
+      navigate("/place-order");
+    } else {
+      alert("Your cart is empty!");
+    }
   };
 
   return (
@@ -35,14 +48,12 @@ const Cart = () => {
                 key={item.id}
                 className="flex items-center justify-between gap-4 border p-4 rounded bg-white shadow-sm hover:shadow-md transition"
               >
-                {/* Product Image */}
                 <img
                   src={item.image || defaultImage}
                   alt={item.name}
                   className="w-16 h-16 object-contain rounded border"
                 />
 
-                {/* Product Info */}
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold">{item.name}</h3>
                   <p className="text-sm text-gray-500 mt-1">
@@ -50,7 +61,6 @@ const Cart = () => {
                   </p>
                 </div>
 
-                {/* Quantity Controls & Remove */}
                 <div className="flex flex-col items-end">
                   <button
                     onClick={() => removeFromCart(item.id)}
@@ -81,12 +91,19 @@ const Cart = () => {
             ))}
           </div>
 
-          {/* Cart Summary */}
-          <div className="mt-8 flex justify-between items-center">
-            <h3 className="text-xl font-bold">
-              Total: ₹{getTotalPrice().toFixed(2)}
-            </h3>
+          {/* Price breakdown */}
+          <div className="mt-8 space-y-2 text-lg">
+            <p>Subtotal: ₹{subtotal.toFixed(2)}</p>
+            <p>GST (9%): ₹{gst.toFixed(2)}</p>
+            <p>SGST (9%): ₹{sgst.toFixed(2)}</p>
+            <p>Discount (5%): -₹{discount.toFixed(2)}</p>
+            <p>Coupon Discount: -₹{couponDiscount.toFixed(2)}</p>
+            <hr />
+            <h3 className="text-xl font-bold">Total: ₹{total.toFixed(2)}</h3>
+          </div>
 
+          {/* Cart actions */}
+          <div className="mt-8 flex justify-between items-center">
             <button
               onClick={clearCart}
               className="text-red-600 hover:text-red-800 transition flex items-center gap-1"
@@ -97,9 +114,12 @@ const Cart = () => {
             </button>
           </div>
 
-          {/* Checkout CTA */}
-          <button className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-lg font-medium transition">
-            Proceed to Checkout
+          {/* Place Order Button */}
+          <button
+            onClick={handlePlaceOrder}
+            className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-lg font-medium transition"
+          >
+            Place Order
           </button>
         </>
       )}

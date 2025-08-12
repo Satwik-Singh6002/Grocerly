@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import navigation hook
+import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -13,7 +13,7 @@ const slides = [
   },
   {
     image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSta_jTiPVc_Fg7a0Ssav7AlGn7uX_0XO5LCQ&s",
+      "https://www.financialexpress.com/wp-content/uploads/2020/06/fruits.jpg",
     title: "Fresh Vegetables Delivered to Your Doorstep",
     buttonText: "Shop Now",
   },
@@ -26,7 +26,7 @@ const slides = [
 ];
 
 const HeroSection = () => {
-  const navigate = useNavigate(); // ✅ Navigation hook
+  const navigate = useNavigate();
 
   const settings = {
     dots: true,
@@ -35,27 +35,42 @@ const HeroSection = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 3000,
     arrows: true,
+    responsive: [
+      {
+        breakpoint: 768, // Tablet
+        settings: {
+          arrows: false,
+        },
+      },
+      {
+        breakpoint: 480, // Mobile
+        settings: {
+          arrows: false,
+          dots: true,
+        },
+      },
+    ],
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Slider {...settings}>
         {slides.map((slide, index) => (
           <div key={index} className="relative">
             <img
               src={slide.image}
               alt={slide.title}
-              className="w-full h-[500px] object-cover"
+              className="w-full h-[250px] sm:h-[350px] md:h-[500px] object-cover"
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-40 text-center">
-              <h2 className="text-white text-3xl md:text-5xl font-bold mb-4">
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-40 px-4 text-center">
+              <h2 className="text-white text-lg sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
                 {slide.title}
               </h2>
               <button
-                onClick={() => navigate("/login")} // ✅ Navigate directly to login
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition duration-300"
+                onClick={() => navigate("/login")}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg text-sm sm:text-lg font-medium transition duration-300"
               >
                 {slide.buttonText}
               </button>

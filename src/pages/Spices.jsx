@@ -1,8 +1,10 @@
 import React from "react";
-import { useCart } from "../context/CartContext"; // ✅ Correct import
+import { useCart } from "../context/CartContext";
+import { toast } from 'react-toastify';  // Added toast import
+import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
 const Spices = () => {
-  const { addToCart } = useCart(); // ✅ use useCart hook correctly
+  const { addToCart } = useCart();
 
   const spices = [
     {
@@ -70,6 +72,21 @@ const Spices = () => {
     },
   ];
 
+  const handleAddToCart = (item) => {
+    addToCart({
+      id: item.id,
+      name: item.name,
+      price: Number(item.price),
+      image: item.image,
+      quantity: 1,
+    });
+    toast.success(`${item.name} added to cart!`, {
+      position: 'bottom-right',
+      autoClose: 2000,
+      hideProgressBar: true,
+    });
+  };
+
   return (
     <div className="min-h-screen w-full relative">
       <div
@@ -111,7 +128,7 @@ const Spices = () => {
                 <h3 className="text-lg font-semibold text-white text-center">{item.name}</h3>
                 <p className="text-green-300 font-medium text-center my-2">₹{item.price}</p>
                 <button
-                  onClick={() => addToCart(item)}
+                  onClick={() => handleAddToCart(item)}
                   className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl transition"
                 >
                   Add to Cart

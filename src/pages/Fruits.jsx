@@ -1,5 +1,7 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Fruit = () => {
   const { addToCart } = useCart();
@@ -78,6 +80,21 @@ const Fruit = () => {
     },
   ];
 
+  const handleAddToCart = (item) => {
+    addToCart({
+      id: item.id,
+      name: item.name,
+      price: Number(item.price.replace(/[₹,]/g, '')),
+      image: item.imageUrl,
+      quantity: 1,
+    });
+    toast.success(`${item.name} added to cart!`, {
+      position: 'bottom-right',
+      autoClose: 1500,
+      hideProgressBar: true,
+    });
+  };
+
   return (
     <div className="relative min-h-screen w-full">
       {/* Background Image */}
@@ -120,15 +137,7 @@ const Fruit = () => {
               <h3 className="text-lg font-semibold text-white">{item.name}</h3>
               <p className="text-green-300 font-medium mb-2">{item.price}</p>
               <button
-                onClick={() =>
-                  addToCart({
-                    id: item.id,
-                    name: item.name,
-                    price: Number(item.price.replace(/[₹,]/g, '')),
-                    image: item.imageUrl,
-                    quantity: 1,
-                  })
-                }
+                onClick={() => handleAddToCart(item)}
                 className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl transition"
               >
                 Add to Cart

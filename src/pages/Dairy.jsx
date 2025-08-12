@@ -1,82 +1,37 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Dairy = () => {
   const { addToCart } = useCart();
 
   const products = [
-    {
-      id: 1,
-      name: 'Amul Gold Milk 1L',
-      price: '₹64',
-      imageUrl:
-        'https://www.jiomart.com/images/product/original/590002686/amul-gold-full-cream-milk-1-l-pouch-product-images-o590002686-p590049228-0-202409131647.jpg',
-      tag: 'Full Cream',
-    },
-    {
-      id: 2,
-      name: 'Mother Dairy Curd 400g',
-      price: '₹35',
-      imageUrl:
-        'https://wholesalemeans.com/image/cache/catalog/product/Grocery/Mother%20Dairy%20Classic%20Dahi%20(Curd)%20400%20G%20Front%20Pic-700x800.png',
-      tag: 'Fresh',
-    },
-    {
-      id: 3,
-      name: 'Amul Paneer 200g',
-      price: '₹85',
-      imageUrl: 'https://m.media-amazon.com/images/I/81hD14MN91L.jpg',
-      tag: 'Soft & Fresh',
-    },
-    {
-      id: 4,
-      name: 'Amul Butter 500g',
-      price: '₹255',
-      imageUrl:
-        'https://www.jiomart.com/images/product/original/490001392/amul-butter-500-g-carton-product-images-o490001392-p490001392-3-202203152128.jpg?im=Resize=(420,420)',
-      tag: 'Classic',
-    },
-    {
-      id: 5,
-      name: 'Nestlé Milkmaid 400g',
-      price: '₹135',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/71CE0VUaGmL._UF1000,1000_QL80_.jpg',
-      tag: 'Dessert Essential',
-    },
-    {
-      id: 6,
-      name: 'Amul Cheese Cubes 200g',
-      price: '₹125',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/71JIA49IdYL._UF1000,1000_QL80_.jpg',
-      tag: 'Snack Friendly',
-    },
-    {
-      id: 7,
-      name: 'Gowardhan Ghee 1L',
-      price: '₹535',
-      imageUrl:
-        'https://www.jiomart.com/images/product/original/490010244/gowardhan-pure-cow-ghee-1-l-pouch-product-images-o490010244-p490010244-0-202203150918.jpg',
-      tag: 'Pure Desi Ghee',
-    },
-    {
-      id: 8,
-      name: 'Amul Masti Buttermilk 500ml',
-      price: '₹22',
-      imageUrl:
-        'https://5.imimg.com/data5/CR/UN/BP/SELLER-40904399/500-ml-amul-buttermilk-500x500.jpg',
-      tag: 'Cooling Drink',
-    },
-    {
-      id: 9,
-      name: 'Epigamia Greek Yogurt 90g',
-      price: '₹50',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/61N9nePDbZL._UF1000,1000_QL80_.jpg',
-      tag: 'Protein Rich',
-    },
+    { id: 1, name: 'Amul Gold Milk 1L', price: '₹64', imageUrl: 'https://www.jiomart.com/images/product/original/590002686/amul-gold-full-cream-milk-1-l-pouch-product-images-o590002686-p590049228-0-202409131647.jpg', tag: 'Full Cream' },
+    { id: 2, name: 'Mother Dairy Curd 400g', price: '₹35', imageUrl: 'https://wholesalemeans.com/image/cache/catalog/product/Grocery/Mother%20Dairy%20Classic%20Dahi%20(Curd)%20400%20G%20Front%20Pic-700x800.png', tag: 'Fresh' },
+    { id: 3, name: 'Amul Paneer 200g', price: '₹85', imageUrl: 'https://m.media-amazon.com/images/I/81hD14MN91L.jpg', tag: 'Soft & Fresh' },
+    { id: 4, name: 'Amul Butter 500g', price: '₹255', imageUrl: 'https://www.jiomart.com/images/product/original/490001392/amul-butter-500-g-carton-product-images-o490001392-p490001392-3-202203152128.jpg?im=Resize=(420,420)', tag: 'Classic' },
+    { id: 5, name: 'Nestlé Milkmaid 400g', price: '₹135', imageUrl: 'https://m.media-amazon.com/images/I/71CE0VUaGmL._UF1000,1000_QL80_.jpg', tag: 'Dessert Essential' },
+    { id: 6, name: 'Amul Cheese Cubes 200g', price: '₹125', imageUrl: 'https://m.media-amazon.com/images/I/71JIA49IdYL._UF1000,1000_QL80_.jpg', tag: 'Snack Friendly' },
+    { id: 7, name: 'Gowardhan Ghee 1L', price: '₹535', imageUrl: 'https://www.jiomart.com/images/product/original/490010244/gowardhan-pure-cow-ghee-1-l-pouch-product-images-o490010244-p490010244-0-202203150918.jpg', tag: 'Pure Desi Ghee' },
+    { id: 8, name: 'Amul Masti Buttermilk 500ml', price: '₹22', imageUrl: 'https://5.imimg.com/data5/CR/UN/BP/SELLER-40904399/500-ml-amul-buttermilk-500x500.jpg', tag: 'Cooling Drink' },
+    { id: 9, name: 'Epigamia Greek Yogurt 90g', price: '₹50', imageUrl: 'https://m.media-amazon.com/images/I/61N9nePDbZL._UF1000,1000_QL80_.jpg', tag: 'Protein Rich' },
   ];
+
+  const handleAddToCart = (item) => {
+    addToCart({
+      id: item.id,
+      name: item.name,
+      price: Number(item.price.replace(/[₹,]/g, '')),
+      image: item.imageUrl,
+      quantity: 1,
+    });
+    toast.success(`${item.name} added to cart!`, {
+      position: 'bottom-right',
+      autoClose: 2000,
+      hideProgressBar: true,
+    });
+  };
 
   return (
     <div className="min-h-screen w-full relative">
@@ -122,15 +77,7 @@ const Dairy = () => {
                 <h3 className="text-lg font-semibold text-white">{item.name}</h3>
                 <p className="text-green-300 font-medium mb-2">{item.price}</p>
                 <button
-                  onClick={() =>
-                    addToCart({
-                      id: item.id,
-                      name: item.name,
-                      price: Number(item.price.replace(/[₹,]/g, '')),
-                      image: item.imageUrl,
-                      quantity: 1,
-                    })
-                  }
+                  onClick={() => handleAddToCart(item)}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl transition"
                 >
                   Add to Cart
@@ -154,7 +101,6 @@ const Dairy = () => {
               transform: translateY(0);
             }
           }
-
           .animate-fade-in {
             animation: fade-in 0.8s ease-out forwards;
           }

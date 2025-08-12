@@ -4,7 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCart } from "../../context/CartContext";
-import toast from "react-hot-toast"; // ✅ Import toast
+import toast from "react-hot-toast";
 
 const featuredProducts = [
   {
@@ -30,23 +30,23 @@ const featuredProducts = [
     id: 104,
     name: "Amul Butter 500g",
     price: 250,
-    image: "https://m.media-amazon.com/images/I/61tYlo-mcFL.jpg",
+    image: "https://m.media-amazon.com/images/I/61vr7r8qqsL._UF894,1000_QL80_.jpg",
   },
   {
     id: 105,
     name: "Tata Salt 1kg",
     price: 25,
-    image: "https://m.media-amazon.com/images/I/71wVtDe3rfL.jpg",
+    image: "https://redrosemart.com/cdn/shop/files/8df34e1b-ef3b-4c14-863a-5904612665f3202392595.jpg?v=1703947346&width=1946",
   },
 ];
 
 function PrevArrow({ onClick }) {
   return (
     <div
-      className="absolute top-1/2 left-2 z-10 transform -translate-y-1/2 cursor-pointer bg-white shadow-lg rounded-full p-2 hover:bg-green-600 hover:text-white transition transform hover:scale-110"
+      className="absolute top-1/2 left-1 sm:left-2 z-10 transform -translate-y-1/2 cursor-pointer bg-white shadow-lg rounded-full p-1.5 sm:p-2 hover:bg-green-600 hover:text-white transition hover:scale-110"
       onClick={onClick}
     >
-      <ChevronLeft size={22} />
+      <ChevronLeft size={20} className="sm:size-22" />
     </div>
   );
 }
@@ -54,10 +54,10 @@ function PrevArrow({ onClick }) {
 function NextArrow({ onClick }) {
   return (
     <div
-      className="absolute top-1/2 right-2 z-10 transform -translate-y-1/2 cursor-pointer bg-white shadow-lg rounded-full p-2 hover:bg-green-600 hover:text-white transition transform hover:scale-110"
+      className="absolute top-1/2 right-1 sm:right-2 z-10 transform -translate-y-1/2 cursor-pointer bg-white shadow-lg rounded-full p-1.5 sm:p-2 hover:bg-green-600 hover:text-white transition hover:scale-110"
       onClick={onClick}
     >
-      <ChevronRight size={22} />
+      <ChevronRight size={20} className="sm:size-22" />
     </div>
   );
 }
@@ -67,7 +67,7 @@ const FeaturedProducts = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product);
-    toast.success(`${product.name} added to cart!`); // ✅ Show notification
+    toast.success(`${product.name} added to cart!`);
   };
 
   const settings = {
@@ -82,29 +82,30 @@ const FeaturedProducts = () => {
     prevArrow: <PrevArrow />,
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 2 } },
-      { breakpoint: 640, settings: { slidesToShow: 1 } },
+      { breakpoint: 768, settings: { slidesToShow: 1.5, arrows: false } },
+      { breakpoint: 480, settings: { slidesToShow: 1, arrows: false } },
     ],
   };
 
   return (
-    <section className="py-14 bg-gradient-to-b from-green-50 to-white relative">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-extrabold text-center mb-10 text-green-700 tracking-tight">
+    <section className="py-10 sm:py-14 bg-gradient-to-b from-green-50 to-white relative">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-center mb-8 sm:mb-10 text-green-700 tracking-tight">
           Featured Products
         </h2>
         <div className="relative">
           <Slider {...settings}>
             {featuredProducts.map((product) => (
-              <div key={product.id} className="px-4">
-                <div className="bg-white p-6 rounded-2xl shadow-lg text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+              <div key={product.id} className="px-2 sm:px-4">
+                <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
                   <div className="overflow-hidden rounded-md">
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="h-44 w-full object-contain mb-5 transition-transform duration-300 hover:scale-105"
+                      className="h-40 sm:h-44 w-full object-contain mb-4 sm:mb-5 transition-transform duration-300 hover:scale-105"
                     />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-800">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-800">
                     {product.name}
                   </h3>
                   <p className="text-green-600 text-lg font-bold mt-2">
@@ -112,7 +113,7 @@ const FeaturedProducts = () => {
                   </p>
                   <button
                     onClick={() => handleAddToCart(product)}
-                    className="mt-5 px-6 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 shadow-md hover:shadow-lg transition transform hover:scale-105"
+                    className="mt-4 sm:mt-5 px-4 sm:px-6 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 shadow-md hover:shadow-lg transition transform hover:scale-105 text-sm sm:text-base"
                   >
                     Add to Cart
                   </button>

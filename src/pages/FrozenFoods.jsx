@@ -1,5 +1,7 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FrozenFoods = () => {
   const { addToCart } = useCart();
@@ -9,42 +11,42 @@ const FrozenFoods = () => {
       id: 1,
       name: 'McCain French Fries (750g)',
       price: '₹120',
-      imageUrl: 'https://m.media-amazon.com/images/I/81cvCjCJtuL._SL1500_.jpg',
+      imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkZRz4Z9CFPX3oynhkK0Cx-cCg38mJXYOlIA&s',
       tag: 'Crispy',
     },
     {
       id: 2,
       name: 'Sumeru Green Peas (500g)',
       price: '₹85',
-      imageUrl: 'https://m.media-amazon.com/images/I/61BaHpFYB9L._SL1000_.jpg',
+      imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGHanaxYx74IS-IMLbrHWE1MuCxVgSBq-tLA&s',
       tag: 'Fresh Frozen',
     },
     {
       id: 3,
       name: 'Godrej Yummiez Chicken Nuggets (400g)',
       price: '₹180',
-      imageUrl: 'https://m.media-amazon.com/images/I/71DCZlwlN0L._SL1500_.jpg',
+      imageUrl: 'https://m.media-amazon.com/images/I/61p3fjlJl0L.jpg',
       tag: 'Best Seller',
     },
     {
       id: 4,
       name: 'ITC Master Chef Veg Patty (500g)',
       price: '₹110',
-      imageUrl: 'https://m.media-amazon.com/images/I/81MkKYdKJVL._SL1500_.jpg',
+      imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6eRXNEzTP_Z1uiZGKRmQlQqg2iBViXZreKQ&s',
       tag: 'Snack Time',
     },
     {
       id: 5,
       name: 'Mother Dairy Ice Cream Vanilla (1L)',
       price: '₹160',
-      imageUrl: 'https://m.media-amazon.com/images/I/71koBqB80GL._SL1500_.jpg',
+      imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTFpMvvJGBq7hbByeFAIWB5uVM74dh58fRhA&s',
       tag: 'Dessert',
     },
     {
       id: 6,
       name: 'McCain Aloo Tikki (420g)',
       price: '₹105',
-      imageUrl: 'https://m.media-amazon.com/images/I/51Nq4XXAgXL._SL1000_.jpg',
+      imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHx-fDfksaR18P1cDY73TAHvT_aTmJATD_TQ&s',
       tag: 'Popular',
     },
     {
@@ -52,7 +54,7 @@ const FrozenFoods = () => {
       name: 'Safal Mixed Veg (500g)',
       price: '₹70',
       imageUrl:
-        'https://www.bigbasket.com/media/uploads/p/l/10000169_14-safal-frozen-mixed-vegetables.jpg',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa6mugqQd6fNj2sIdBhHhTlSwLnzzVjaDC_Q&s',
       tag: 'Healthy Mix',
     },
     {
@@ -60,7 +62,7 @@ const FrozenFoods = () => {
       name: 'Amul Frozen Paneer (200g)',
       price: '₹90',
       imageUrl:
-        'https://www.bigbasket.com/media/uploads/p/l/30006821_3-amul-malai-paneer-frozen.jpg',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuHgn-wVz0T5IOg-dklTTuAtDFF4bBAKGEHQ&s',
       tag: 'Protein Rich',
     },
     {
@@ -68,10 +70,25 @@ const FrozenFoods = () => {
       name: 'Vadilal Ice Cream Choco Bar (70ml)',
       price: '₹25',
       imageUrl:
-        'https://www.bigbasket.com/media/uploads/p/l/1203619_3-vadilal-chocobar.jpg',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_CfVs11yqZY-HnXNGr_2ONIg-WIXVaxvOJw&s',
       tag: 'Kids Favorite',
     },
   ];
+
+  const handleAddToCart = (item) => {
+    addToCart({
+      id: item.id,
+      name: item.name,
+      price: Number(item.price.replace(/[₹,]/g, '')),
+      image: item.imageUrl,
+      quantity: 1,
+    });
+    toast.success(`${item.name} added to cart!`, {
+      position: 'bottom-right',
+      autoClose: 1500,
+      hideProgressBar: true,
+    });
+  };
 
   return (
     <div className="relative min-h-screen w-full">
@@ -115,15 +132,7 @@ const FrozenFoods = () => {
               <h3 className="text-lg font-semibold text-white">{item.name}</h3>
               <p className="text-green-300 font-medium mb-2">{item.price}</p>
               <button
-                onClick={() =>
-                  addToCart({
-                    id: item.id,
-                    name: item.name,
-                    price: Number(item.price.replace(/[₹,]/g, '')),
-                    image: item.imageUrl,
-                    quantity: 1,
-                  })
-                }
+                onClick={() => handleAddToCart(item)}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl transition"
               >
                 Add to Cart

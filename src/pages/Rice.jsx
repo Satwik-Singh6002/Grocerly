@@ -1,5 +1,7 @@
 import React from 'react';
-import { useCart } from "../context/CartContext"; // ✅ Correct import
+import { useCart } from "../context/CartContext";
+import { toast } from 'react-toastify';  // Toast import
+import 'react-toastify/dist/ReactToastify.css'; // Toast styles
 
 const Rice = () => {
   const { addToCart } = useCart();
@@ -70,6 +72,21 @@ const Rice = () => {
     },
   ];
 
+  const handleAddToCart = (item) => {
+    addToCart({
+      id: item.id,
+      name: item.name,
+      price: Number(item.price.replace(/[₹,]/g, '')),
+      image: item.imageUrl,
+      quantity: 1,
+    });
+    toast.success(`${item.name} added to cart!`, {
+      position: 'bottom-right',
+      autoClose: 2000,
+      hideProgressBar: true,
+    });
+  };
+
   return (
     <div className="min-h-screen w-full relative">
       <div
@@ -111,8 +128,8 @@ const Rice = () => {
                 <h3 className="text-lg font-semibold text-white">{item.name}</h3>
                 <p className="text-green-300 font-medium mb-2">{item.price}</p>
                 <button
+                  onClick={() => handleAddToCart(item)}
                   className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-2 rounded-xl transition"
-                  onClick={() => addToCart(item)}
                 >
                   Add to Cart
                 </button>
@@ -122,8 +139,7 @@ const Rice = () => {
         </div>
       </div>
 
-      <style>
-        {`
+      <style>{`
           @keyframes fade-in {
             from {
               opacity: 0;
@@ -134,12 +150,10 @@ const Rice = () => {
               transform: translateY(0);
             }
           }
-
           .animate-fade-in {
             animation: fade-in 0.8s ease-out forwards;
           }
-        `}
-      </style>
+        `}</style>
     </div>
   );
 };

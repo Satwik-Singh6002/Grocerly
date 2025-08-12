@@ -1,5 +1,7 @@
 import React from "react";
-import { useCart } from "../context/CartContext"; // adjust path if needed
+import { useCart } from "../context/CartContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const dalProducts = [
   {
@@ -55,14 +57,16 @@ const dalProducts = [
     name: "Organic Rajma Red 1kg",
     price: 135,
     label: "Rich Protein",
-    image: "https://organictattva.com/cdn/shop/files/8906055440117_01_e0886063-e7a8-46b8-a1eb-d2acab425791.png?v=1716207936",
+    image:
+      "https://organictattva.com/cdn/shop/files/8906055440117_01_e0886063-e7a8-46b8-a1eb-d2acab425791.png?v=1716207936",
   },
   {
     id: 8,
     name: "Tata Moong Dal Yellow Split 1kg",
     price: 112,
     label: "Healthy",
-    image: "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=360/da/cms-assets/cms/product/d0799cef-246f-4750-a878-49f893403c2c.png",
+    image:
+      "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=360/da/cms-assets/cms/product/d0799cef-246f-4750-a878-49f893403c2c.png",
   },
   {
     id: 9,
@@ -76,6 +80,21 @@ const dalProducts = [
 
 const DalAndPulses = () => {
   const { addToCart } = useCart();
+
+  const handleAddToCart = (item) => {
+    addToCart({
+      id: item.id,
+      name: item.name,
+      price: Number(item.price),
+      image: item.image,
+      quantity: 1,
+    });
+    toast.success(`${item.name} added to cart!`, {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: true,
+    });
+  };
 
   return (
     <div
@@ -124,7 +143,7 @@ const DalAndPulses = () => {
                 ₹{item.price}
               </p>
               <button
-                onClick={() => addToCart(item)}
+                onClick={() => handleAddToCart(item)}
                 className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-full text-sm font-semibold transition-all"
               >
                 Add to Cart

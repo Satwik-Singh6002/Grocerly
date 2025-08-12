@@ -1,81 +1,88 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Bakery = () => {
+const Rice = () => {
   const { addToCart } = useCart();
+
+  const handleAddToCart = (item) => {
+    addToCart({
+      id: item.id,
+      name: item.name,
+      price: parseInt(item.price.replace(/[₹,]/g, '')),
+      image: item.imageUrl,
+    });
+    toast.success(`${item.name} added to cart!`, {
+      position: 'bottom-right',
+      autoClose: 2000,
+      hideProgressBar: true,
+    });
+  };
 
   const products = [
     {
       id: 1,
-      name: 'Brown Bread (400g)',
-      price: '₹40',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/71U-Pz+n8TL._SL1500_.jpg',
-      tag: 'Healthy',
+      name: 'India Gate Basmati Rice 1kg',
+      price: '₹125',
+      imageUrl: 'https://m.media-amazon.com/images/I/81mHz4XKK0L.jpg',
+      tag: 'Basmati',
     },
     {
       id: 2,
-      name: 'White Bread (400g)',
-      price: '₹35',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/81VPHv0jQ+L._SL1500_.jpg',
-      tag: 'Classic',
+      name: 'Daawat Rozana Super 5kg',
+      price: '₹420',
+      imageUrl: 'https://m.media-amazon.com/images/I/71xqTSRdbML._UF894,1000_QL80_.jpg',
+      tag: 'Long Grain',
     },
     {
       id: 3,
-      name: 'Garlic Bread',
-      price: '₹60',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/71JkqPQ-6vL._SL1500_.jpg',
-      tag: 'Bestseller',
+      name: 'Fortune Everyday Biryani Rice',
+      price: '₹99',
+      imageUrl: 'https://www.jiomart.com/images/product/original/491215473/fortune-everyday-full-grain-basmati-rice-1-kg-product-images-o491215473-p491215473-0-202203150346.jpg',
+      tag: 'Biryani',
     },
     {
       id: 4,
-      name: 'Burger Buns (Pack of 4)',
-      price: '₹45',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/81kN5UINvCL._SL1500_.jpg',
-      tag: 'Soft & Fresh',
+      name: 'Kohinoor Basmati Rice 1kg',
+      price: '₹135',
+      imageUrl: 'https://m.media-amazon.com/images/I/71xIb0tGQNL._UF1000,1000_QL80_.jpg',
+      tag: 'Fragrant',
     },
     {
       id: 5,
-      name: 'Pav Buns (Pack of 6)',
-      price: '₹30',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/71+AmWnbU6L._SL1500_.jpg',
-      tag: 'Mumbai Style',
+      name: 'Lal Qilla Traditional Basmati 1kg',
+      price: '₹145',
+      imageUrl: 'https://m.media-amazon.com/images/I/51HoaLo97FS._AC_.jpg',
+      tag: 'Premium',
     },
     {
       id: 6,
-      name: 'Multigrain Bread',
-      price: '₹50',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/71Zw9rM6IlL._SL1500_.jpg',
-      tag: 'Nutritional',
+      name: 'Aeroplane Jeerakasala Rice 1kg',
+      price: '₹160',
+      imageUrl: 'https://www.jiomart.com/images/product/original/491297292/aeroplane-1121-extra-long-grain-basmati-rice-1-kg-product-images-o491297292-p591041688-0-202204262006.jpg?im=Resize=(420,420)',
+      tag: 'South Indian',
     },
     {
       id: 7,
-      name: 'Banana Cake (200g)',
-      price: '₹75',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/81yPHPIBGxL._SL1500_.jpg',
-      tag: 'Sweet Treat',
+      name: 'Golden Harvest Everyday Rice 5kg',
+      price: '₹315',
+      imageUrl: 'https://www.jiomart.com/images/product/original/491971770/golden-harvest-pulao-basmati-rice-5-kg-product-images-o491971770-p591217811-0-202206091827.jpg?im=Resize=(1000,1000)',
+      tag: 'Budget',
     },
     {
       id: 8,
-      name: 'Tea Rusk (300g)',
-      price: '₹60',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/81c6ZnyRWuL._SL1500_.jpg',
-      tag: 'Crunchy',
+      name: 'Organic Tattva Brown Rice 1kg',
+      price: '₹110',
+      imageUrl: 'https://m.media-amazon.com/images/I/61v88n1C0BL.jpg',
+      tag: 'Healthy',
     },
     {
       id: 9,
-      name: 'Vanilla Muffins (Pack of 2)',
-      price: '₹55',
-      imageUrl:
-        'https://m.media-amazon.com/images/I/61+F2e6OwtL._SL1200_.jpg',
-      tag: 'Snack Time',
+      name: 'Tilda Basmati Rice 1kg',
+      price: '₹220',
+      imageUrl: 'https://m.media-amazon.com/images/I/71SRL6dUx0L._UF1000,1000_QL80_.jpg',
+      tag: 'Export Quality',
     },
   ];
 
@@ -86,17 +93,17 @@ const Bakery = () => {
         className="absolute inset-0 bg-cover bg-center filter blur-sm brightness-90"
         style={{
           backgroundImage:
-            'url("https://images.unsplash.com/photo-1565958011703-44f9829ba187")',
+            'url("https://cdn.britannica.com/17/176517-050-6F2B774A/Pile-uncooked-rice-grains-Oryza-sativa.jpg")',
         }}
       ></div>
 
       {/* Foreground Content */}
       <div className="relative z-10 px-4 sm:px-8 py-10 text-white">
         <h1 className="text-5xl font-bold text-center mb-4 drop-shadow-lg">
-          Fresh from the Bakery
+          Rice Collection
         </h1>
         <p className="text-center text-gray-100 max-w-2xl mx-auto mb-10">
-          Breads, buns, cakes, and more — all soft, fresh, and perfect for any time of the day.
+          Find premium Basmati, biryani, and everyday rice at great prices.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
@@ -121,14 +128,7 @@ const Bakery = () => {
               <h3 className="text-lg font-semibold text-white">{item.name}</h3>
               <p className="text-green-300 font-medium mb-2">{item.price}</p>
               <button
-                onClick={() =>
-                  addToCart({
-                    id: item.id,
-                    name: item.name,
-                    price: parseInt(item.price.replace(/[₹,]/g, '')),
-                    image: item.imageUrl,
-                  })
-                }
+                onClick={() => handleAddToCart(item)}
                 className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-2 rounded-xl transition"
               >
                 Add to Cart
@@ -142,16 +142,9 @@ const Bakery = () => {
       <style>
         {`
           @keyframes fade-in {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
           }
-
           .animate-fade-in {
             animation: fade-in 0.8s ease-out forwards;
           }
@@ -161,4 +154,4 @@ const Bakery = () => {
   );
 };
 
-export default Bakery;
+export default Rice;

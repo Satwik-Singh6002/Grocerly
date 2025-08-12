@@ -1,7 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+// Components
 import Header from "./components/Header";
+
+// Pages
 import Home from "./pages/Home";
 import DalAndPulses from "./pages/DalAndPulses";
 import AttaAndFlour from "./pages/AttaAndFlour";
@@ -17,11 +22,17 @@ import Bakery from "./pages/Bakery";
 import FrozenFoods from "./pages/FrozenFoods";
 import SignIn from "./pages/SignIn";
 import Signup from "./pages/Signup";
-import Cart from "./pages/Cart";
+import CartPage from "./pages/CartPage";
+import Checkout from "./pages/Checkout";
+import PlaceOrder from "./pages/PlaceOrder";
+import ShopByCategory from "./pages/ShopByCategory";
+
+// Context
 import { CartProvider } from "./context/CartContext";
 
 function AppWrapper() {
   const location = useLocation();
+
   const hideHeaderRoutes = ["/login", "/signup"];
   const shouldHideHeader = hideHeaderRoutes.includes(location.pathname);
 
@@ -42,15 +53,21 @@ function AppWrapper() {
         <Route path="/vegetables" element={<Vegetables />} />
         <Route path="/bakery" element={<Bakery />} />
         <Route path="/frozen-foods" element={<FrozenFoods />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/place-order" element={<PlaceOrder />} />
+        <Route path="/shop-by-category" element={<ShopByCategory />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
+
+      {/* ✅ Global notification container */}
+      <ToastContainer position="top-right" autoClose={1500} hideProgressBar={false} newestOnTop />
     </>
   );
 }
 
-function App() {
+export default function App() {
   return (
     <CartProvider>
       <Router>
@@ -59,5 +76,3 @@ function App() {
     </CartProvider>
   );
 }
-
-export default App;
