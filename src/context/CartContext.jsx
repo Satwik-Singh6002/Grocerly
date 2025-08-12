@@ -20,21 +20,19 @@ export const CartProvider = ({ children }) => {
       const existingItem = prevItems.find((item) => item.id === product.id);
 
       if (existingItem) {
-        // ✅ Just increase quantity, no blue notification
+        // ✅ Only update quantity, no toast
         return prevItems.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       } else {
-        const toastId = `add-${product.id}`;
-        if (!toast.isActive(toastId)) {
-          toast.success(`${product.name} added to cart! ✅`, {
-            position: "top-right",
-            autoClose: 1500,
-            toastId,
-          });
-        }
+        // ✅ Only show toast when adding a NEW product
+        toast.success(`${product.name} added to cart! ✅`, {
+          position: "top-right",
+          autoClose: 1500,
+          toastId: `add-${product.id}`, // prevents duplicates
+        });
         return [...prevItems, { ...product, quantity: 1 }];
       }
     });
@@ -42,12 +40,11 @@ export const CartProvider = ({ children }) => {
 
   const removeFromCart = (productId) => {
     const removedItem = cartItems.find((item) => item.id === productId);
-    const toastId = `remove-${productId}`;
-    if (!toast.isActive(toastId)) {
-      toast.error(`${removedItem?.name} removed from cart ❌`, {
+    if (removedItem) {
+      toast.error(`${removedItem.name} removed from cart ❌`, {
         position: "top-right",
         autoClose: 1500,
-        toastId,
+        toastId: `remove-${productId}`, // prevents duplicates
       });
     }
     setCartItems((prevItems) =>

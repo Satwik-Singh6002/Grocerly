@@ -26,8 +26,9 @@ const ShopByCategory = () => {
       <h2 className="text-3xl font-bold text-center text-green-700 mb-8">
         Shop by Category
       </h2>
-      <div className="max-w-7xl mx-auto px-4 sm:px-8">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-8">
+        {/* Fixed 3 columns layout */}
+        <div className="grid grid-cols-3 gap-6">
           {categories.map(({ name, icon, path }) => (
             <Link
               to={path}

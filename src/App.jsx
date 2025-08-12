@@ -26,13 +26,14 @@ import CartPage from "./pages/CartPage";
 import Checkout from "./pages/Checkout";
 import PlaceOrder from "./pages/PlaceOrder";
 import ShopByCategory from "./pages/ShopByCategory";
+import SearchResults from "./pages/SearchResults"; // ✅ Added search page
 
 // Context
 import { CartProvider } from "./context/CartContext";
+import { ProductsProvider } from "./context/ProductsContext"; // ✅ Added Products Context
 
 function AppWrapper() {
   const location = useLocation();
-
   const hideHeaderRoutes = ["/login", "/signup"];
   const shouldHideHeader = hideHeaderRoutes.includes(location.pathname);
 
@@ -57,11 +58,11 @@ function AppWrapper() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/shop-by-category" element={<ShopByCategory />} />
+        <Route path="/search" element={<SearchResults />} /> {/* ✅ Search results route */}
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
 
-      {/* ✅ Global notification container */}
       <ToastContainer position="top-right" autoClose={1500} hideProgressBar={false} newestOnTop />
     </>
   );
@@ -69,10 +70,12 @@ function AppWrapper() {
 
 export default function App() {
   return (
-    <CartProvider>
-      <Router>
-        <AppWrapper />
-      </Router>
-    </CartProvider>
+    <ProductsProvider> {/* ✅ Products context wraps whole app */}
+      <CartProvider>
+        <Router>
+          <AppWrapper />
+        </Router>
+      </CartProvider>
+    </ProductsProvider>
   );
 }
