@@ -26,12 +26,13 @@ import CartPage from "./pages/CartPage";
 import Checkout from "./pages/Checkout";
 import PlaceOrder from "./pages/PlaceOrder";
 import ShopByCategory from "./pages/ShopByCategory";
-import SearchResults from "./pages/SearchResults"; // ✅ Added search page
+import SearchResults from "./pages/SearchResults";
 
 // Context
 import { CartProvider } from "./context/CartContext";
-import { ProductsProvider } from "./context/ProductsContext"; // ✅ Added Products Context
+import { ProductsProvider } from "./context/ProductsContext";
 
+// ✅ Wrapper to handle header visibility
 function AppWrapper() {
   const location = useLocation();
   const hideHeaderRoutes = ["/login", "/signup"];
@@ -58,24 +59,33 @@ function AppWrapper() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/shop-by-category" element={<ShopByCategory />} />
-        <Route path="/search" element={<SearchResults />} /> {/* ✅ Search results route */}
+
+        {/* ✅ Only keep one search route that accepts a query */}
+        <Route path="/search" element={<SearchResults />} />
+
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
 
-      <ToastContainer position="top-right" autoClose={1500} hideProgressBar={false} newestOnTop />
+      <ToastContainer
+        position="top-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop
+      />
     </>
   );
 }
 
+// ✅ Main App Component with proper Provider order
 export default function App() {
   return (
-    <ProductsProvider> {/* ✅ Products context wraps whole app */}
-      <CartProvider>
-        <Router>
+    <Router>
+      <ProductsProvider>
+        <CartProvider>
           <AppWrapper />
-        </Router>
-      </CartProvider>
-    </ProductsProvider>
+        </CartProvider>
+      </ProductsProvider>
+    </Router>
   );
 }
