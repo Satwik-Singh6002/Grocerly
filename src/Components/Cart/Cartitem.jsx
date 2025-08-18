@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Trash2, Minus, Plus } from 'lucide-react';
 
-const CartItem = ({ product, onDelete, onQuantityChange }) => {
+const CartItem = ({ product, onDelete, onIncrease, onDecrease }) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
@@ -9,7 +9,7 @@ const CartItem = ({ product, onDelete, onQuantityChange }) => {
       
       {/* Product Image */}
       <img 
-        src={product.image} 
+        src={product.imageUrl} 
         alt={product.name} 
         className="w-20 h-20 object-cover rounded mx-auto sm:mx-0"
       />
@@ -28,14 +28,14 @@ const CartItem = ({ product, onDelete, onQuantityChange }) => {
         {/* Quantity Controls */}
         <div className="flex items-center justify-center space-x-2">
           <button
-            onClick={() => onQuantityChange(product.id, product.quantity - 1)}
+            onClick={() => onDecrease(product.id)}
             className="px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded"
           >
             <Minus size={16} />
           </button>
           <span className="w-6 text-center">{product.quantity}</span>
           <button
-            onClick={() => onQuantityChange(product.id, product.quantity + 1)}
+            onClick={() => onIncrease(product.id)}
             className="px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded"
           >
             <Plus size={16} />

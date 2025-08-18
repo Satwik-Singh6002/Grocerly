@@ -9,7 +9,7 @@ const CartPage = () => {
     cartItems,
     removeFromCart,
     clearCart,
-    addToCart,
+    increaseQuantity,
     decreaseQuantity,
   } = useCart();
 
@@ -42,13 +42,8 @@ const CartPage = () => {
                 key={item.id}
                 product={item}
                 onDelete={() => removeFromCart(item.id)}
-                onQuantityChange={(qty) => {
-                  if (qty > item.quantity) {
-                    addToCart(item);
-                  } else {
-                    decreaseQuantity(item.id);
-                  }
-                }}
+                onIncrease={() => increaseQuantity(item.id)}
+                onDecrease={() => decreaseQuantity(item.id)}
               />
             ))}
           </div>

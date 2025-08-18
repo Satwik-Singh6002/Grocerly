@@ -27,7 +27,8 @@ import Checkout from "./pages/Checkout";
 import PlaceOrder from "./pages/PlaceOrder";
 import ShopByCategory from "./pages/ShopByCategory";
 import SearchResults from "./pages/SearchResults";
-
+import OrderSuccess from "./pages/OrderSuccess"; // ✅ New import
+import OrderTracking from "./pages/OrderTracking";
 // Context
 import { CartProvider } from "./context/CartContext";
 import { ProductsProvider } from "./context/ProductsContext";
@@ -58,8 +59,9 @@ function AppWrapper() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/place-order" element={<PlaceOrder />} />
+        <Route path="/order-success" element={<OrderSuccess />} /> {/* ✅ New route */}
         <Route path="/shop-by-category" element={<ShopByCategory />} />
-
+<Route path="/order-tracking" element={<OrderTracking />} />
         {/* ✅ Only keep one search route that accepts a query */}
         <Route path="/search" element={<SearchResults />} />
 

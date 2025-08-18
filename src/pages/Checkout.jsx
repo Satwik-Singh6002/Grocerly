@@ -7,16 +7,17 @@ const Checkout = () => {
   const { cartItems = [], clearCart } = useCart() || {};
   const navigate = useNavigate();
 
+  // Price calculations
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-
   const gst = subtotal * 0.09;
   const sgst = subtotal * 0.09;
   const couponDiscount = subtotal > 1000 ? 100 : 0;
   const total = subtotal + gst + sgst - couponDiscount;
 
+  // Billing form
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -42,14 +43,18 @@ const Checkout = () => {
       cartItems,
       total,
       orderDate: new Date().toISOString(),
+      orderId: "ORD" + Math.floor(Math.random() * 1000000), // unique order id
     };
 
+    // Save order
     localStorage.setItem("lastOrder", JSON.stringify(orderData));
 
+    // Clear cart
     clearCart();
 
     toast.success("Order placed successfully!");
 
+    // Navigate to OrderSuccess page
     navigate("/order-success");
   };
 
