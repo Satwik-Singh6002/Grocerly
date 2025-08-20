@@ -1,7 +1,6 @@
+// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 // Components
 import Header from "./components/Header";
@@ -27,11 +26,8 @@ import Checkout from "./pages/Checkout";
 import PlaceOrder from "./pages/PlaceOrder";
 import ShopByCategory from "./pages/ShopByCategory";
 import SearchResults from "./pages/SearchResults";
-import OrderSuccess from "./pages/OrderSuccess"; // ✅ New import
+import OrderSuccess from "./pages/OrderSuccess";
 import OrderTracking from "./pages/OrderTracking";
-// Context
-import { CartProvider } from "./context/CartContext";
-import { ProductsProvider } from "./context/ProductsContext";
 
 // ✅ Wrapper to handle header visibility
 function AppWrapper() {
@@ -59,35 +55,23 @@ function AppWrapper() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/place-order" element={<PlaceOrder />} />
-        <Route path="/order-success" element={<OrderSuccess />} /> {/* ✅ New route */}
+        <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="/shop-by-category" element={<ShopByCategory />} />
-<Route path="/order-tracking" element={<OrderTracking />} />
-        {/* ✅ Only keep one search route that accepts a query */}
+        <Route path="/order-tracking" element={<OrderTracking />} />
         <Route path="/search" element={<SearchResults />} />
 
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
-
-      <ToastContainer
-        position="top-right"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop
-      />
     </>
   );
 }
 
-// ✅ Main App Component with proper Provider order
+// ✅ Clean App Component - NO providers here
 export default function App() {
   return (
     <Router>
-      <ProductsProvider>
-        <CartProvider>
-          <AppWrapper />
-        </CartProvider>
-      </ProductsProvider>
+      <AppWrapper />
     </Router>
   );
 }

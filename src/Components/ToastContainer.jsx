@@ -15,6 +15,7 @@ const ToastContainer = () => {
         </div>
       ))}
 
+      {/* ✅ Animation styles */}
       <style>
         {`
           @keyframes fade-in-out {

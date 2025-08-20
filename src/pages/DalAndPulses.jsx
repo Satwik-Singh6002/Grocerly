@@ -1,177 +1,351 @@
-import React from "react";
+import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useToast } from "../context/ToastContext";
+import { Search, Filter, Star, Heart, Shield, Truck } from "lucide-react";
 
 const dalProducts = [
   {
     id: 1,
     name: "Tata Sampann Toor Dal 1kg",
     price: 130,
+    originalPrice: 150,
     label: "Bestseller",
-    image:
-      "https://www.bbassets.com/media/uploads/p/xl/40000291_14-tata-sampann-unpolished-toor-dalarhar-dal.jpg",
+    rating: 4.5,
+    reviews: 234,
+    image: "https://www.bbassets.com/media/uploads/p/xl/40000291_14-tata-sampann-unpolished-toor-dalarhar-dal.jpg",
+    category: "Toor Dal",
+    organic: false,
+    discount: 13
   },
   {
     id: 2,
     name: "24 Mantra Organic Moong Dal 1kg",
     price: 145,
+    originalPrice: 165,
     label: "Organic",
-    image:
-      "https://www.bbassets.com/media/uploads/p/xl/20001056_8-24-mantra-organic-yellow-moong-dal.jpg",
+    rating: 4.7,
+    reviews: 189,
+    image: "https://www.bbassets.com/media/uploads/p/xl/20001056_8-24-mantra-organic-yellow-moong-dal.jpg",
+    category: "Moong Dal",
+    organic: true,
+    discount: 12
   },
   {
     id: 3,
     name: "Fortune Urad Dal 1kg",
     price: 115,
+    originalPrice: 130,
     label: "Popular",
-    image:
-      "https://eu.dookan.com/cdn/shop/files/FORTUNEUradgotax500px.png?v=1751293201",
+    rating: 4.3,
+    reviews: 167,
+    image: "https://eu.dookan.com/cdn/shop/files/FORTUNEUradgotax500px.png?v=1751293201",
+    category: "Urad Dal",
+    organic: false,
+    discount: 12
   },
   {
     id: 4,
     name: "Neu Farm Unpolished Toor Dal 1kg",
     price: 120,
+    originalPrice: 140,
     label: "Value Pack",
-    image:
-      "https://www.jiomart.com/images/product/original/492570976/neu-farm-unpolished-desi-toor-dal-1-kg-product-images-o492570976-p590891753-0-202206011226.jpg?im=Resize=(1000,1000)",
+    rating: 4.6,
+    reviews: 98,
+    image: "https://www.jiomart.com/images/product/original/492570976/neu-farm-unpolished-desi-toor-dal-1-kg-product-images-o492570976-p590891743-0-202206011226.jpg",
+    category: "Toor Dal",
+    organic: true,
+    discount: 14
   },
   {
     id: 5,
     name: "Organic Tattva Chana Dal 1kg",
     price: 99,
+    originalPrice: 120,
     label: "Top Rated",
-    image:
-      "https://www.bbassets.com/media/uploads/p/l/30002299_4-organic-tattva-organic-chana-dal.jpg",
+    rating: 4.8,
+    reviews: 312,
+    image: "https://www.bbassets.com/media/uploads/p/l/30002299_4-organic-tattva-organic-chana-dal.jpg",
+    category: "Chana Dal",
+    organic: true,
+    discount: 18
   },
   {
     id: 6,
     name: "Unpolished Desi Masoor Malka Dal 1kg",
     price: 110,
+    originalPrice: 125,
     label: "Fresh",
-    image:
-      "https://www.bbassets.com/media/uploads/p/l/40293860_2-fortune-masoor-malka-desi-unpolished-sortex-cleaned.jpg",
+    rating: 4.4,
+    reviews: 145,
+    image: "https://www.bbassets.com/media/uploads/p/l/40293860_2-fortune-masoor-malka-desi-unpolished-sortex-cleaned.jpg",
+    category: "Masoor Dal",
+    organic: false,
+    discount: 12
   },
   {
     id: 7,
     name: "Organic Rajma Red 1kg",
     price: 135,
+    originalPrice: 160,
     label: "Rich Protein",
-    image:
-      "https://organictattva.com/cdn/shop/files/8906055440117_01_e0886063-e7a8-46b8-a1eb-d2acab425791.png?v=1716207936",
+    rating: 4.2,
+    reviews: 87,
+    image: "https://organictattva.com/cdn/shop/files/8906055440117_01_e0886063-e7a8-46b8-a1eb-d2acab425791.png?v=1716207936",
+    category: "Rajma",
+    organic: true,
+    discount: 16
   },
   {
     id: 8,
     name: "Tata Moong Dal Yellow Split 1kg",
     price: 112,
+    originalPrice: 130,
     label: "Healthy",
-    image:
-      "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=360/da/cms-assets/cms/product/d0799cef-246f-4750-a878-49f893403c2c.png",
+    rating: 4.1,
+    reviews: 203,
+    image: "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=360/da/cms-assets/cms/product/d0799cef-246f-4750-a878-49f893403c2c.png",
+    category: "Moong Dal",
+    organic: false,
+    discount: 14
   },
   {
     id: 9,
     name: "Natureland Organic Urad Dal Chilka 1kg",
     price: 125,
+    originalPrice: 145,
     label: "Certified Organic",
-    image:
-      "https://www.jiomart.com/images/product/original/rv3ykksuvl/vgbnp-natural-urad-chilka-urad-dal-unpolished-skinned-urad-dal-urad-dal-chilka-500g-product-images-orv3ykksuvl-p606245991-0-202311201953.jpg?im=Resize=(1000,1000)",
-  },
+    rating: 4.9,
+    reviews: 267,
+    image: "https://www.jiomart.com/images/product/original/rv3ykksuvl/vgbnp-natural-urad-chilka-urad-dal-unpolished-skinned-urad-dal-urad-dal-chilka-500g-product-images-orv3ykksuvl-p606245991-0-202311201953.jpg",
+    category: "Urad Dal",
+    organic: true,
+    discount: 14
+  }
 ];
 
 const DalAndPulses = () => {
   const { addToCart } = useCart();
+  const { showToast } = useToast();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [sortBy, setSortBy] = useState("featured");
+  const [wishlist, setWishlist] = useState([]);
+
+  const categories = ["All", ...new Set(dalProducts.map(item => item.category))];
+
+  const filteredProducts = dalProducts
+    .filter(item => 
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedCategory === "All" || item.category === selectedCategory)
+    )
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "priceLow":
+          return a.price - b.price;
+        case "priceHigh":
+          return b.price - a.price;
+        case "rating":
+          return b.rating - a.rating;
+        default:
+          return 0;
+      }
+    });
 
   const handleAddToCart = (item) => {
     addToCart({
       id: item.id,
       name: item.name,
-      price: Number(item.price),
+      price: item.price,
       image: item.image,
       quantity: 1,
     });
-    toast.success(`${item.name} added to cart!`, {
-      position: "bottom-right",
-      autoClose: 2000,
-      hideProgressBar: true,
-    });
+    showToast(`${item.name} added to cart!`, "success");
   };
 
-  return (
-    <div
-      className="min-h-screen py-14 px-4 sm:px-6 lg:px-12 bg-center bg-cover relative"
-      style={{
-        backgroundImage:
-          "url('https://www.protectourlivelihood.in/wp-content/uploads/2025/04/Image-Pulses.jpg')",
-      }}
-    >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm"></div>
+  const toggleWishlist = (id) => {
+    setWishlist(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
 
-      <div className="relative max-w-7xl mx-auto text-white">
-        <h2 className="text-4xl font-extrabold text-center text-white mb-4 drop-shadow-lg">
-          Dal & Pulses
-        </h2>
-        <p className="text-center text-lg text-gray-300 mb-12">
-          Nutrient-rich lentils and pulses for a healthy lifestyle.
+  const StarRating = ({ rating }) => (
+    <div className="flex items-center gap-1">
+      {[...Array(5)].map((_, i) => (
+        <Star
+          key={i}
+          size={14}
+          className={i < Math.floor(rating) ? "text-yellow-400 fill-current" : "text-gray-400"}
+        />
+      ))}
+      <span className="text-sm text-gray-300 ml-1">({rating})</span>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-amber-50 py-8 px-4 sm:px-6 lg:px-8">
+      {/* Header Section */}
+      <div className="max-w-7xl mx-auto mb-12 text-center">
+        <h1 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-green-600 to-amber-600 bg-clip-text text-transparent">
+          Premium Dal & Pulses
+        </h1>
+        <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          Discover our handpicked selection of nutrient-rich lentils and pulses, 
+          carefully sourced for quality and freshness.
         </p>
 
-        <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-          {dalProducts.map((item, index) => (
-            <div
-              key={item.id}
-              className="bg-white/10 backdrop-blur-lg rounded-2xl p-5 shadow-xl hover:scale-105 transition-transform duration-300 animate-fade-in"
-              style={{
-                animationDelay: `${index * 100}ms`,
-                animationFillMode: "forwards",
-                opacity: 0,
-              }}
+        {/* Search and Filters */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder="Search dal, pulses..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
+          
+          <div className="flex gap-3 flex-wrap justify-center">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-green-500"
             >
-              <span className="text-xs bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full inline-block mb-4">
-                {item.label}
-              </span>
-              <div className="flex justify-center">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="h-40 object-contain mix-blend-multiply drop-shadow-md"
-                />
-              </div>
-              <h3 className="text-lg font-semibold mt-4 text-white text-center">
-                {item.name}
-              </h3>
-              <p className="text-green-300 font-bold text-center my-2 text-xl">
-                ₹{item.price}
-              </p>
-              <button
-                onClick={() => handleAddToCart(item)}
-                className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-full text-sm font-semibold transition-all"
-              >
-                Add to Cart
-              </button>
-            </div>
-          ))}
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+            
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-green-500"
+            >
+              <option value="featured">Featured</option>
+              <option value="priceLow">Price: Low to High</option>
+              <option value="priceHigh">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Features Banner */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+          <div className="text-center p-4 bg-white rounded-2xl shadow-sm">
+            <Truck className="mx-auto text-green-600 mb-2" size={24} />
+            <p className="text-sm font-semibold">Free Delivery</p>
+          </div>
+          <div className="text-center p-4 bg-white rounded-2xl shadow-sm">
+            <Shield className="mx-auto text-green-600 mb-2" size={24} />
+            <p className="text-sm font-semibold">Quality Guarantee</p>
+          </div>
+          <div className="text-center p-4 bg-white rounded-2xl shadow-sm">
+            <Star className="mx-auto text-green-600 mb-2" size={24} />
+            <p className="text-sm font-semibold">4.8/5 Rating</p>
+          </div>
+          <div className="text-center p-4 bg-white rounded-2xl shadow-sm">
+            <Filter className="mx-auto text-green-600 mb-2" size={24} />
+            <p className="text-sm font-semibold">Organic Options</p>
+          </div>
         </div>
       </div>
 
-      {/* Animation Keyframes */}
-      <style>
-        {`
-          @keyframes fade-in {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
+      {/* Products Grid */}
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {filteredProducts.map((item, index) => (
+            <div
+              key={item.id}
+              className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 group overflow-hidden"
+            >
+              {/* Product Image */}
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-300"
+                />
+                
+                {/* Badges */}
+                <div className="absolute top-3 left-3 space-y-2">
+                  {item.organic && (
+                    <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-semibold">
+                      🌱 Organic
+                    </span>
+                  )}
+                  <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full font-semibold">
+                    {item.label}
+                  </span>
+                </div>
 
-          .animate-fade-in {
-            animation: fade-in 0.8s ease-out forwards;
-          }
-        `}
-      </style>
+                {/* Wishlist Button */}
+                <button
+                  onClick={() => toggleWishlist(item.id)}
+                  className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors"
+                >
+                  <Heart
+                    size={18}
+                    className={wishlist.includes(item.id) ? "text-red-500 fill-current" : "text-gray-400"}
+                  />
+                </button>
+
+                {/* Discount Badge */}
+                {item.discount && (
+                  <div className="absolute bottom-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold">
+                    {item.discount}% OFF
+                  </div>
+                )}
+              </div>
+
+              {/* Product Info */}
+              <div className="p-6">
+                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 h-14">
+                  {item.name}
+                </h3>
+
+                {/* Rating */}
+                <div className="flex items-center justify-between mb-3">
+                  <StarRating rating={item.rating} />
+                  <span className="text-sm text-gray-500">{item.reviews} reviews</span>
+                </div>
+
+                {/* Price */}
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-2xl font-bold text-green-700">₹{item.price}</span>
+                  {item.originalPrice && (
+                    <span className="text-lg text-gray-500 line-through">₹{item.originalPrice}</span>
+                  )}
+                </div>
+
+                {/* Add to Cart Button */}
+                <button
+                  onClick={() => handleAddToCart(item)}
+                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No products found. Try a different search.</p>
+          </div>
+        )}
+      </div>
+
+      {/* CSS for line clamp */}
+      <style jsx>{`
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      `}</style>
     </div>
   );
 };
