@@ -44,18 +44,18 @@ const dalProducts = [
     discount: 12
   },
   {
-    id: 4,
-    name: "Neu Farm Unpolished Toor Dal 1kg",
-    price: 120,
-    originalPrice: 140,
-    label: "Value Pack",
-    rating: 4.6,
-    reviews: 98,
-    image: "https://www.jiomart.com/images/product/original/492570976/neu-farm-unpolished-desi-toor-dal-1-kg-product-images-o492570976-p590891743-0-202206011226.jpg",
-    category: "Toor Dal",
-    organic: true,
-    discount: 14
-  },
+  id: 4,
+  name: "Neu Farm Unpolished Toor Dal 1kg",
+  price: 120,
+  originalPrice: 140,
+  label: "Value Pack", 
+  rating: 4.6,
+  reviews: 98,
+  image: "https://www.jiomart.com/images/product/original/492570976/neu-farm-unpolished-desi-toor-dal-1-kg-product-images-o492570976-p590891743-0-202206011226.jpg",
+  category: "Toor Dal",
+  organic: false, 
+  discount: 14
+},
   {
     id: 5,
     name: "Organic Tattva Chana Dal 1kg",
@@ -103,7 +103,7 @@ const dalProducts = [
     label: "Healthy",
     rating: 4.1,
     reviews: 203,
-    image: "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=360/da/cms-assets/cms/product/d0799cef-246f-4750-a878-49f893403c2c.png",
+    image: "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=360/da/cms-assets/cms-product/d0799cef-246f-4750-a878-49f893403c2c.png",
     category: "Moong Dal",
     organic: false,
     discount: 14
@@ -159,7 +159,7 @@ const DalAndPulses = () => {
       image: item.image,
       quantity: 1,
     });
-    showToast(`${item.name} added to cart!`, "success");
+    // Removed duplicate toast (CartContext already handles this)
   };
 
   const toggleWishlist = (id) => {
@@ -254,80 +254,86 @@ const DalAndPulses = () => {
       {/* Products Grid */}
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredProducts.map((item, index) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 group overflow-hidden"
-            >
-              {/* Product Image */}
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-300"
-                />
-                
-                {/* Badges */}
-                <div className="absolute top-3 left-3 space-y-2">
-                  {item.organic && (
-                    <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-semibold">
-                      🌱 Organic
-                    </span>
-                  )}
-                  <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full font-semibold">
-                    {item.label}
-                  </span>
-                </div>
-
-                {/* Wishlist Button */}
-                <button
-                  onClick={() => toggleWishlist(item.id)}
-                  className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors"
-                >
-                  <Heart
-                    size={18}
-                    className={wishlist.includes(item.id) ? "text-red-500 fill-current" : "text-gray-400"}
+          {filteredProducts.map((item) => {
+            const hasOrganicInName = item.name.toLowerCase().includes('organic') || 
+                                    item.name.toLowerCase().includes('organi') ||
+                                    item.label.toLowerCase().includes('organic');
+            
+            return (
+              <div
+                key={item.id}
+                className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 group overflow-hidden"
+              >
+                {/* Product Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-300"
                   />
-                </button>
-
-                {/* Discount Badge */}
-                {item.discount && (
-                  <div className="absolute bottom-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold">
-                    {item.discount}% OFF
+                  
+                  {/* Badges */}
+                  <div className="absolute top-3 left-3 space-y-2">
+                    {item.organic && !hasOrganicInName && (
+                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-semibold">
+                        🌱 Organic
+                      </span>
+                    )}
+                    <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full font-semibold">
+                      {item.label}
+                    </span>
                   </div>
-                )}
-              </div>
 
-              {/* Product Info */}
-              <div className="p-6">
-                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 h-14">
-                  {item.name}
-                </h3>
+                  {/* Wishlist Button */}
+                  <button
+                    onClick={() => toggleWishlist(item.id)}
+                    className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors"
+                  >
+                    <Heart
+                      size={18}
+                      className={wishlist.includes(item.id) ? "text-red-500 fill-current" : "text-gray-400"}
+                    />
+                  </button>
 
-                {/* Rating */}
-                <div className="flex items-center justify-between mb-3">
-                  <StarRating rating={item.rating} />
-                  <span className="text-sm text-gray-500">{item.reviews} reviews</span>
-                </div>
-
-                {/* Price */}
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-2xl font-bold text-green-700">₹{item.price}</span>
-                  {item.originalPrice && (
-                    <span className="text-lg text-gray-500 line-through">₹{item.originalPrice}</span>
+                  {/* Discount Badge */}
+                  {item.discount && (
+                    <div className="absolute bottom-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold">
+                      {item.discount}% OFF
+                    </div>
                   )}
                 </div>
 
-                {/* Add to Cart Button */}
-                <button
-                  onClick={() => handleAddToCart(item)}
-                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-                >
-                  Add to Cart
-                </button>
+                {/* Product Info */}
+                <div className="p-6">
+                  <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 h-14">
+                    {item.name}
+                  </h3>
+
+                  {/* Rating */}
+                  <div className="flex items-center justify-between mb-3">
+                    <StarRating rating={item.rating} />
+                    <span className="text-sm text-gray-500">{item.reviews} reviews</span>
+                  </div>
+
+                  {/* Price */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-2xl font-bold text-green-700">₹{item.price}</span>
+                    {item.originalPrice && (
+                      <span className="text-lg text-gray-500 line-through">₹{item.originalPrice}</span>
+                    )}
+                  </div>
+
+                  {/* Add to Cart Button */}
+                  <button
+                    onClick={() => handleAddToCart(item)}
+                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {filteredProducts.length === 0 && (

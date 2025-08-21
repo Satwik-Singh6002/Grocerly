@@ -1,10 +1,72 @@
 // src/context/ToastContext.jsx
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 
 const ToastContext = createContext(null);
 
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const headerRef = useRef(null);
+
+  // Measure header height on mount and when toasts change
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      // Try to find the header element by common class names or IDs
+      const headerSelectors = [
+        'header', 
+        '.header', 
+        '#header', 
+        '[class*="header"]',
+        '[class*="Header"]',
+        'nav',
+        '.nav',
+        '#nav',
+        '[class*="navigation"]'
+      ];
+      
+      let headerElement = null;
+      
+      for (const selector of headerSelectors) {
+        try {
+          const element = document.querySelector(selector);
+          if (element && element.offsetHeight > 0) {
+            headerElement = element;
+            break;
+          }
+        } catch (e) {
+          // Skip invalid selectors
+        }
+      }
+      
+      // If we found a header, use its height plus some padding
+      if (headerElement) {
+        setHeaderHeight(headerElement.offsetHeight + 16);
+      } else {
+        // Fallback: use a reasonable default height (e.g., 64px) plus padding
+        setHeaderHeight(80);
+      }
+    };
+
+    // Initial measurement
+    updateHeaderHeight();
+
+    // Set up a mutation observer to detect changes in the header
+    const observer = new MutationObserver(updateHeaderHeight);
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'style'] 
+    });
+
+    // Also update on window resize
+    window.addEventListener('resize', updateHeaderHeight);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', updateHeaderHeight);
+    };
+  }, []);
 
   const showToast = useCallback((message, type = "info") => {
     const id = Date.now();
@@ -54,9 +116,10 @@ export const ToastProvider = ({ children }) => {
     <ToastContext.Provider value={{ showToast }}>
       {children}
 
-      {/* ✅ Toast UI Renderer with Tailwind animations */}
+      {/* ✅ Toast UI Renderer with dynamic positioning based on header height */}
       <div 
-        className="fixed top-4 right-4 space-y-3 z-50"
+        className="fixed right-4 space-y-3 z-50"
+        style={{ top: `${headerHeight}px` }}
         aria-live="polite"
         aria-atomic="true"
       >
