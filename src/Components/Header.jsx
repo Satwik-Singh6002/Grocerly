@@ -63,7 +63,7 @@ const Header = () => {
 
           {/* Action Icons */}
           <div className="actions-container">
-            {/* Mobile Search Toggle */}
+            {/* Mobile Search Toggle - Hidden on desktop */}
             <button
               className="icon-button mobile-search-btn"
               onClick={() => setShowMobileSearch(!showMobileSearch)}
@@ -129,21 +129,15 @@ const Header = () => {
           <div className="mobile-menu">
             <nav className="mobile-nav">
               <Link to="/" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
-                Home
-              </Link>
-              <Link to="/offers" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
-                Offers
-              </Link>
-              <Link to="/account" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
-                My Account
+                <i className="fas fa-home"></i> Home
               </Link>
               <Link to="/wishlist" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
-                Wishlist
+                <i className="fas fa-heart"></i> Wishlist
               </Link>
-              {/* Cart option in mobile menu */}
+              {/* Cart option in mobile menu with icon instead of text */}
               <Link to="/cart" className="mobile-nav-link cart-option" onClick={() => setShowMobileMenu(false)}>
                 <div className="cart-option-content">
-                  <span>Cart</span>
+                  <i className="fas fa-shopping-cart"></i> Cart
                   {totalItems > 0 && (
                     <span className="cart-count-mobile">
                       {totalItems}
@@ -407,6 +401,9 @@ const Header = () => {
           border-radius: 6px;
           transition: background 0.2s ease;
           margin-bottom: 4px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
         }
         
         .mobile-nav-link:hover {
@@ -416,9 +413,9 @@ const Header = () => {
         
         .cart-option-content {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          width: 100%;
+          gap: 12px;
+          position: relative;
         }
         
         .cart-count-mobile {
@@ -430,6 +427,9 @@ const Header = () => {
           border-radius: 10px;
           min-width: 20px;
           text-align: center;
+          position: absolute;
+          top: -8px;
+          left: 16px;
         }
         
         @keyframes slideDown {
@@ -486,6 +486,13 @@ const Header = () => {
           
           .actions-container {
             gap: 12px;
+          }
+        }
+        
+        @media (min-width: 768px) {
+          /* Hide mobile search button on desktop */
+          .mobile-search-btn {
+            display: none;
           }
         }
         

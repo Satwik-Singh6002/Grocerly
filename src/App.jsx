@@ -2,6 +2,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
+// Context & Notifications
+import { WishlistProvider } from "./context/WishlistContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // Components
 import Header from "./components/Header";
 
@@ -28,6 +33,7 @@ import ShopByCategory from "./pages/ShopByCategory";
 import SearchResults from "./pages/SearchResults";
 import OrderSuccess from "./pages/OrderSuccess";
 import OrderTracking from "./pages/OrderTracking";
+import Wishlist from "./pages/Wishlist"; // ✅ new import
 
 // ✅ Wrapper to handle header visibility
 function AppWrapper() {
@@ -59,6 +65,7 @@ function AppWrapper() {
         <Route path="/shop-by-category" element={<ShopByCategory />} />
         <Route path="/order-tracking" element={<OrderTracking />} />
         <Route path="/search" element={<SearchResults />} />
+        <Route path="/wishlist" element={<Wishlist />} /> {/* ✅ wishlist route */}
 
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<Signup />} />
@@ -67,11 +74,14 @@ function AppWrapper() {
   );
 }
 
-// ✅ Clean App Component - NO providers here
+// ✅ Wrap the whole app with WishlistProvider & ToastContainer
 export default function App() {
   return (
-    <Router>
-      <AppWrapper />
-    </Router>
+    <WishlistProvider>
+      <Router>
+        <AppWrapper />
+        <ToastContainer position="top-right" autoClose={2000} />
+      </Router>
+    </WishlistProvider>
   );
 }

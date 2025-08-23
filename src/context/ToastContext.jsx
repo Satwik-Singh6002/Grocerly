@@ -68,28 +68,26 @@ export const ToastProvider = ({ children }) => {
     };
   }, []);
 
-  const showToast = useCallback((message, type = "info") => {
-    const id = Date.now();
-    
-    // Prevent duplicate toasts with the same message within 500ms
-    setToasts((prev) => {
-      const now = Date.now();
-      const recentDuplicate = prev.find(
-        toast => toast.message === message && (now - toast.id) < 500
-      );
-      
-      if (recentDuplicate) {
-        return prev; // Don't add duplicate
-      }
-      
-      return [...prev, { id, message, type }];
-    });
+  const showToast = useCallback((message, type = "info", toastId) => {
+  setToasts((prev) => {
+    // Prevent duplicate toasts by toastId or by message + time fallback
+    const now = Date.now();
+    const recentDuplicate = toastId
+      ? prev.find((toast) => toast.id === toastId)
+      : prev.find((toast) => toast.message === message && now - toast.id < 500);
 
-    // Auto remove after 2s (reduced from 3s)
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 2000);
-  }, []);
+    if (recentDuplicate) return prev;
+
+    const id = toastId || Date.now();
+    return [...prev, { id, message, type }];
+  });
+
+  setTimeout(() => {
+    setToasts((prev) =>
+      toastId ? prev.filter((t) => t.id !== toastId) : prev.filter((t) => t.message !== message)
+    );
+  }, 2000);
+}, []);
 
   const removeToast = useCallback((id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
