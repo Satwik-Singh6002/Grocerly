@@ -11,6 +11,10 @@ import { useToast } from "./ToastContext";
 
 const CartContext = createContext();
 
+// Helper: always return numeric price
+const normalizePrice = (price) =>
+  parseFloat(String(price).replace(/[^0-9.]/g, "")) || 0;
+
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem("cartItems");
@@ -18,8 +22,6 @@ export const CartProvider = ({ children }) => {
   });
 
   const { showToast } = useToast();
-
-  // To avoid duplicate toasts
   const toastIdsRef = useRef(new Map());
 
   // Save to localStorage
@@ -32,47 +34,43 @@ export const CartProvider = ({ children }) => {
     return () => toastIdsRef.current.clear();
   }, []);
 
-  // ✅ Add to Cart (with deduplicated toast)
+  // ✅ Add to Cart
   const addToCart = useCallback(
-    (product, showNotification = true) => {
+    (product, quantity = 1, showNotification = true) => {
       setCartItems((prevItems) => {
         const existingItem = prevItems.find((item) => item.id === product.id);
         let updatedItems;
 
         if (existingItem) {
-          const newQuantity = existingItem.quantity + 1;
+          const newQuantity = existingItem.quantity + quantity;
           updatedItems = prevItems.map((item) =>
             item.id === product.id
               ? { ...item, quantity: newQuantity }
               : item
           );
-
-          if (showNotification) {
-            const toastId = `cart-increase-${product.id}-${newQuantity}`;
-            if (!toastIdsRef.current.has(toastId)) {
-              showToast(
-                `${product.name} quantity increased to ${newQuantity}`,
-                "success",
-                toastId
-              );
-              toastIdsRef.current.set(toastId, Date.now());
-              setTimeout(() => {
-                toastIdsRef.current.delete(toastId);
-              }, 1000);
-            }
-          }
         } else {
-          updatedItems = [...prevItems, { ...product, quantity: 1 }];
+          updatedItems = [
+            ...prevItems,
+            {
+              ...product,
+              price: normalizePrice(product.price),
+              quantity,
+            },
+          ];
+        }
 
-          if (showNotification) {
-            const toastId = `cart-add-${product.id}-1`;
-            if (!toastIdsRef.current.has(toastId)) {
-              showToast(`${product.name} added to cart`, "success", toastId);
-              toastIdsRef.current.set(toastId, Date.now());
-              setTimeout(() => {
-                toastIdsRef.current.delete(toastId);
-              }, 1000);
-            }
+        if (showNotification) {
+          const toastId = `cart-add-${product.id}-${quantity}`;
+          if (!toastIdsRef.current.has(toastId)) {
+            showToast(
+              `${quantity} ${product.name} added to cart`,
+              "success",
+              toastId
+            );
+            toastIdsRef.current.set(toastId, Date.now());
+            setTimeout(() => {
+              toastIdsRef.current.delete(toastId);
+            }, 1000);
           }
         }
 
@@ -85,34 +83,16 @@ export const CartProvider = ({ children }) => {
   // ✅ Remove item
   const removeFromCart = useCallback(
     (id, productName, showNotification = true) => {
-      setCartItems((prev) => prev.filter((item) => item.id !== id));
-      if (showNotification) {
-        const toastId = `cart-remove-${id}`;
-        if (!toastIdsRef.current.has(toastId)) {
-          showToast(`${productName || "Item"} removed from cart`, "info", toastId);
-          toastIdsRef.current.set(toastId, Date.now());
-          setTimeout(() => toastIdsRef.current.delete(toastId), 1000);
-        }
-      }
-    },
-    [showToast]
-  );
+      setCartItems((prev) => {
+        const itemToRemove = prev.find((item) => item.id === id);
+        const updatedItems = prev.filter((item) => item.id !== id);
 
-  // ✅ Increase quantity
-  const increaseQuantity = useCallback(
-    (id, productName, showNotification = true) => {
-      setCartItems((prevItems) => {
-        const updated = prevItems.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-
-        if (showNotification) {
-          const item = updated.find((i) => i.id === id);
-          const toastId = `cart-increase-${id}-${item.quantity}`;
+        if (showNotification && itemToRemove) {
+          const toastId = `cart-remove-${id}`;
           if (!toastIdsRef.current.has(toastId)) {
             showToast(
-              `${productName || "Item"} quantity increased to ${item.quantity}`,
-              "success",
+              `${productName || itemToRemove.name} removed from cart`,
+              "info",
               toastId
             );
             toastIdsRef.current.set(toastId, Date.now());
@@ -120,29 +100,104 @@ export const CartProvider = ({ children }) => {
           }
         }
 
-        return updated;
+        return updatedItems;
       });
     },
     [showToast]
   );
 
-  // ✅ Decrease quantity
+  // ✅ FIXED: Increase quantity (only for existing items)
+  const increaseQuantity = useCallback(
+    (id, productName, showNotification = true) => {
+      setCartItems((prevItems) => {
+        const existingItem = prevItems.find((item) => item.id === id);
+        
+        // If item doesn't exist, don't add it - just return current cart
+        if (!existingItem) {
+          if (showNotification) {
+            const toastId = `cart-not-found-${id}`;
+            if (!toastIdsRef.current.has(toastId)) {
+              showToast(
+                `Item not found in cart`,
+                "error",
+                toastId
+              );
+              toastIdsRef.current.set(toastId, Date.now());
+              setTimeout(() => toastIdsRef.current.delete(toastId), 1000);
+            }
+          }
+          return prevItems;
+        }
+
+        // If item exists, increase its quantity
+        const updatedItems = prevItems.map((item) =>
+          item.id === id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+
+        if (showNotification) {
+          const item = updatedItems.find((i) => i.id === id);
+          if (item) {
+            const toastId = `cart-increase-${id}-${item.quantity}`;
+            if (!toastIdsRef.current.has(toastId)) {
+              showToast(
+                `${productName || item.name} quantity increased to ${item.quantity}`,
+                "success",
+                toastId
+              );
+              toastIdsRef.current.set(toastId, Date.now());
+              setTimeout(() => toastIdsRef.current.delete(toastId), 1000);
+            }
+          }
+        }
+
+        return updatedItems;
+      });
+    },
+    [showToast]
+  );
+
+  // ✅ Decrease quantity (safe toast check)
   const decreaseQuantity = useCallback(
     (id, productName, showNotification = true) => {
       setCartItems((prevItems) => {
-        const updated = prevItems
-          .map((item) =>
-            item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-          )
-          .filter((item) => item.quantity > 0);
+        const itemToUpdate = prevItems.find((item) => item.id === id);
+        if (!itemToUpdate) return prevItems;
 
-        if (showNotification) {
-          const item = updated.find((i) => i.id === id);
-          if (item) {
-            const toastId = `cart-decrease-${id}-${item.quantity}`;
+        let updatedItems;
+
+        if (itemToUpdate.quantity > 1) {
+          updatedItems = prevItems.map((item) =>
+            item.id === id
+              ? { ...item, quantity: item.quantity - 1 }
+              : item
+          );
+
+          if (showNotification) {
+            const item = updatedItems.find((i) => i.id === id);
+            if (item) {
+              const toastId = `cart-decrease-${id}-${item.quantity}`;
+              if (!toastIdsRef.current.has(toastId)) {
+                showToast(
+                  `${productName || item.name} quantity decreased to ${item.quantity}`,
+                  "info",
+                  toastId
+                );
+                toastIdsRef.current.set(toastId, Date.now());
+                setTimeout(() => toastIdsRef.current.delete(toastId), 1000);
+              }
+            }
+          }
+        } else {
+          // Remove item if quantity becomes 0
+          updatedItems = prevItems.filter((item) => item.id !== id);
+
+          if (showNotification) {
+            const toastId = `cart-remove-${id}`;
             if (!toastIdsRef.current.has(toastId)) {
               showToast(
-                `${productName || "Item"} quantity decreased to ${item.quantity}`,
+                `${productName || "Item"} removed from cart`,
                 "info",
                 toastId
               );
@@ -152,7 +207,7 @@ export const CartProvider = ({ children }) => {
           }
         }
 
-        return updated;
+        return updatedItems;
       });
     },
     [showToast]
@@ -174,15 +229,12 @@ export const CartProvider = ({ children }) => {
     [showToast]
   );
 
-  // ✅ Cart totals
+  // ✅ Cart totals (always use normalized price)
   const cartTotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + normalizePrice(item.price) * item.quantity,
     0
   );
-  const cartCount = cartItems.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const value = {
     cartItems,

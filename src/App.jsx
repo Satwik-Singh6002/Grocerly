@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 
 // Context & Notifications
 import { WishlistProvider } from "./context/WishlistContext";
+import { CartProvider } from "./context/CartContext"; // ✅ import your CartProvider
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -33,13 +34,12 @@ import ShopByCategory from "./pages/ShopByCategory";
 import SearchResults from "./pages/SearchResults";
 import OrderSuccess from "./pages/OrderSuccess";
 import OrderTracking from "./pages/OrderTracking";
-import Wishlist from "./pages/Wishlist"; // ✅ new import
+import Wishlist from "./pages/Wishlist";
 import AdminSignin from "./pages/AdminSignin";
 
-// ✅ Wrapper to handle header visibility
 function AppWrapper() {
   const location = useLocation();
-  const hideHeaderRoutes = ["/login", "/signup", "/adminsignin"]; // added adminsignin
+  const hideHeaderRoutes = ["/login", "/signup", "/adminsignin"];
   const shouldHideHeader = hideHeaderRoutes.includes(location.pathname);
 
   return (
@@ -66,7 +66,7 @@ function AppWrapper() {
         <Route path="/shop-by-category" element={<ShopByCategory />} />
         <Route path="/order-tracking" element={<OrderTracking />} />
         <Route path="/search" element={<SearchResults />} />
-        <Route path="/wishlist" element={<Wishlist />} /> {/* ✅ wishlist route */}
+        <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/adminsignin" element={<AdminSignin />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<Signup />} />
@@ -75,14 +75,15 @@ function AppWrapper() {
   );
 }
 
-// ✅ Wrap the whole app with WishlistProvider & ToastContainer
 export default function App() {
   return (
     <WishlistProvider>
-      <Router>
-        <AppWrapper />
-        <ToastContainer position="top-right" autoClose={2000} />
-      </Router>
+      <CartProvider> {/* ✅ wrap here */}
+        <Router>
+          <AppWrapper />
+          <ToastContainer position="top-right" autoClose={2000} />
+        </Router>
+      </CartProvider>
     </WishlistProvider>
   );
 }
