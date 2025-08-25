@@ -12,7 +12,7 @@ const Beverages = () => {
   const [wishlist, setWishlist] = useState([]);
 
   const products = [
-    {
+        {
       id: 1, 
       name: 'Coca-Cola Soft Drink 2L', 
       price: 99, 
@@ -202,8 +202,7 @@ const Beverages = () => {
       image: item.image,
       quantity: 1,
     });
-    showToast(`${item.name} added to cart!`, "success");
-  };
+   };
 
   const toggleWishlist = (id) => {
     setWishlist(prev => 
@@ -215,7 +214,7 @@ const Beverages = () => {
       const message = wishlist.includes(id) 
         ? `${product.name} removed from wishlist` 
         : `${product.name} added to wishlist!`;
-      showToast(message, wishlist.includes(id) ? "info" : "success");
+      showToast(message, wishlist.includes(id) ? "info" : "success", `wishlist-${id}`);
     }
   };
 

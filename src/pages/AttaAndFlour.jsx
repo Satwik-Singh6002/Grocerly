@@ -1,3 +1,4 @@
+// src/pages/AttaAndFlour.jsx
 import React, { useState, useMemo } from "react";
 import { useCart } from "../context/CartContext";
 import { useToast } from "../context/ToastContext";
@@ -203,18 +204,17 @@ const AttaAndFlour = () => {
       image: item.image,
       quantity: 1,
     });
-    showToast(`${item.name} added to cart!`, "success");
+    // REMOVED the duplicate showToast call here
   };
 
-const toggleWishlist = (item) => {
-  const isInWishlist = wishlist.find((w) => w.id === item.id);
-  if (isInWishlist) {
-    removeFromWishlist(item.id, item.name); // name is passed for proper toast
-  } else {
-    addToWishlist(item);
-  }
-};
-
+  const toggleWishlist = (item) => {
+    const isInWishlist = wishlist.find((w) => w.id === item.id);
+    if (isInWishlist) {
+      removeFromWishlist(item.id);
+    } else {
+      addToWishlist(item);
+    }
+  };
 
   const StarRating = ({ rating }) => (
     <div className="flex items-center gap-1">

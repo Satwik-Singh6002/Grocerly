@@ -1,14 +1,22 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const SignIn = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-xl">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Welcome Back 👋</h2>
-        
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          Welcome Back 👋
+        </h2>
+
         <form>
           <div className="mb-6">
-            <label htmlFor="email" className="block text-sm font-semibold text-gray-600 mb-1">Email</label>
+            <label
+              htmlFor="email"
+              className="block text-sm font-semibold text-gray-600 mb-1"
+            >
+              Email
+            </label>
             <div className="relative">
               <input
                 type="email"
@@ -16,14 +24,17 @@ const SignIn = () => {
                 placeholder="you@example.com"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <span className="absolute right-3 top-3 text-green-500">
-                📧
-              </span>
+              <span className="absolute right-3 top-3 text-green-500">📧</span>
             </div>
           </div>
 
           <div className="mb-6">
-            <label htmlFor="password" className="block text-sm font-semibold text-gray-600 mb-1">Password</label>
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-gray-600 mb-1"
+            >
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -42,9 +53,18 @@ const SignIn = () => {
 
         <p className="text-sm text-center text-gray-600 mt-6">
           Don't have an account?{" "}
-          <a href="/signup" className="text-blue-600 font-medium hover:underline">
+          <Link to="/signup" className="text-blue-600 font-medium hover:underline">
             Sign Up
-          </a>
+          </Link>
+        </p>
+
+        {/* 👇 Admin Link here */}
+        <p className="text-sm text-center text-gray-600 mt-2">
+          Are you an{" "}
+          <Link to="/adminsignin" className="text-red-600 font-medium hover:underline">
+            Admin
+          </Link>
+          ?
         </p>
       </div>
     </div>

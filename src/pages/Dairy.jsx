@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react";
 import { useCart } from "../context/CartContext";
-import { useToast } from "../context/ToastContext";
 import { useWishlist } from "../context/WishlistContext";
 import { Search, Filter, Star, Heart, Shield, Truck } from "lucide-react";
 
@@ -20,19 +19,20 @@ const products = [
   { id: 13, name: "Amul Shrikhand Elaichi 500g", price: 150, tag: "Sweetened Yogurt", image: "https://m.media-amazon.com/images/I/718w1v4O+VL._SL1500_.jpg" },
   { id: 14, name: "Gowardhan Dahi 500g", price: 45, tag: "Curd", image: "https://www.jiomart.com/images/product/500x500/490009077/gowardhan-dahi-500-g-product-images-o490009077-p490009077-0-202110202200.jpg" },
   { id: 15, name: "Amul Paneer Tikka 250g", price: 95, tag: "Ready to Cook", image: "https://cdn.shopify.com/s/files/1/0347/5327/5500/products/amulpaneertikka_1024x1024.jpg" },
- 
 ];
 
 const Dairy = () => {
   const { addToCart } = useCart();
-  const { showToast } = useToast();
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState("featured");
 
-  const categories = useMemo(() => ["All", ...new Set(products.map((p) => p.tag))], []);
+  const categories = useMemo(
+    () => ["All", ...new Set(products.map((p) => p.tag))],
+    []
+  );
 
   const filteredProducts = useMemo(() => {
     let filtered = products.filter(
@@ -54,44 +54,32 @@ const Dairy = () => {
   }, [searchTerm, selectedCategory, sortBy]);
 
   const handleAddToCart = (item) => {
-    addToCart({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      image: item.image,
-      quantity: 1,
-    });
-    showToast(`${item.name} added to cart!`, "success", `add-to-cart-${item.id}`);
+    // If your CartContext supports (product, showNotification), pass false:
+    addToCart(
+      {
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        image: item.image,
+        quantity: 1,
+      },
+      
+    );
   };
 
   const toggleWishlist = (item) => {
-  const isInWishlist = wishlist.find((w) => w.id === item.id);
-  if (isInWishlist) {
-    removeFromWishlist(item.id);
-    showToast(
-      `${item.name} removed from wishlist.`,
-      "info",
-      `remove-wishlist-${item.id}` // ✅ unique toastId
-    );
-  } else {
-    addToWishlist(item);
-    showToast(
-      `${item.name} added to wishlist!`,
-      "success",
-      `add-wishlist-${item.id}` // ✅ unique toastId
-    );
-  }
-};
+    const isInWishlist = wishlist.find((w) => w.id === item.id);
+    if (isInWishlist) {
+      removeFromWishlist(item.id);
+    } else {
+      addToWishlist(item);
+    }
+  };
 
-
-  const StarRating = ({ rating }) => (
+  const StarRating = () => (
     <div className="flex items-center gap-1">
       {[...Array(5)].map((_, i) => (
-        <Star
-          key={i}
-          size={14}
-          className={"text-yellow-400 fill-current"}
-        />
+        <Star key={i} size={14} className="text-yellow-400 fill-current" />
       ))}
       <span className="text-sm text-gray-300 ml-1">(4.5)</span>
     </div>
@@ -186,6 +174,7 @@ const Dairy = () => {
                   <button
                     onClick={() => toggleWishlist(item)}
                     className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-red-50"
+                    aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
                   >
                     <Heart
                       size={18}
@@ -197,9 +186,6 @@ const Dairy = () => {
                   <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 h-14">{item.name}</h3>
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-2xl font-bold text-orange-700">₹{item.price}</span>
-                    {item.originalPrice && (
-                      <span className="text-lg text-gray-500 line-through">₹{item.originalPrice}</span>
-                    )}
                   </div>
                   <button
                     onClick={() => handleAddToCart(item)}
@@ -220,8 +206,8 @@ const Dairy = () => {
         )}
       </div>
 
-      {/* CSS */}
-      <style jsx>{`
+      {/* If you're not using styled-jsx, prefer plain <style> */}
+      <style>{`
         .line-clamp-2 {
           display: -webkit-box;
           -webkit-box-orient: vertical;

@@ -34,11 +34,12 @@ import SearchResults from "./pages/SearchResults";
 import OrderSuccess from "./pages/OrderSuccess";
 import OrderTracking from "./pages/OrderTracking";
 import Wishlist from "./pages/Wishlist"; // ✅ new import
+import AdminSignin from "./pages/AdminSignin";
 
 // ✅ Wrapper to handle header visibility
 function AppWrapper() {
   const location = useLocation();
-  const hideHeaderRoutes = ["/login", "/signup"];
+  const hideHeaderRoutes = ["/login", "/signup", "/adminsignin"]; // added adminsignin
   const shouldHideHeader = hideHeaderRoutes.includes(location.pathname);
 
   return (
@@ -66,7 +67,7 @@ function AppWrapper() {
         <Route path="/order-tracking" element={<OrderTracking />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/wishlist" element={<Wishlist />} /> {/* ✅ wishlist route */}
-
+        <Route path="/adminsignin" element={<AdminSignin />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>

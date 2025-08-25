@@ -52,7 +52,8 @@ export const CartProvider = ({ children }) => {
             if (!toastIdsRef.current.has(toastId)) {
               showToast(
                 `${product.name} quantity increased to ${newQuantity}`,
-                "success"
+                "success",
+                toastId
               );
               toastIdsRef.current.set(toastId, Date.now());
               setTimeout(() => {
@@ -66,7 +67,7 @@ export const CartProvider = ({ children }) => {
           if (showNotification) {
             const toastId = `cart-add-${product.id}-1`;
             if (!toastIdsRef.current.has(toastId)) {
-              showToast(`${product.name} added to cart`, "success");
+              showToast(`${product.name} added to cart`, "success", toastId);
               toastIdsRef.current.set(toastId, Date.now());
               setTimeout(() => {
                 toastIdsRef.current.delete(toastId);
@@ -88,7 +89,7 @@ export const CartProvider = ({ children }) => {
       if (showNotification) {
         const toastId = `cart-remove-${id}`;
         if (!toastIdsRef.current.has(toastId)) {
-          showToast(`${productName || "Item"} removed from cart`, "info");
+          showToast(`${productName || "Item"} removed from cart`, "info", toastId);
           toastIdsRef.current.set(toastId, Date.now());
           setTimeout(() => toastIdsRef.current.delete(toastId), 1000);
         }
@@ -111,7 +112,8 @@ export const CartProvider = ({ children }) => {
           if (!toastIdsRef.current.has(toastId)) {
             showToast(
               `${productName || "Item"} quantity increased to ${item.quantity}`,
-              "success"
+              "success",
+              toastId
             );
             toastIdsRef.current.set(toastId, Date.now());
             setTimeout(() => toastIdsRef.current.delete(toastId), 1000);
@@ -141,7 +143,8 @@ export const CartProvider = ({ children }) => {
             if (!toastIdsRef.current.has(toastId)) {
               showToast(
                 `${productName || "Item"} quantity decreased to ${item.quantity}`,
-                "info"
+                "info",
+                toastId
               );
               toastIdsRef.current.set(toastId, Date.now());
               setTimeout(() => toastIdsRef.current.delete(toastId), 1000);
@@ -162,7 +165,7 @@ export const CartProvider = ({ children }) => {
       if (showNotification) {
         const toastId = `cart-clear`;
         if (!toastIdsRef.current.has(toastId)) {
-          showToast("Cart cleared", "info");
+          showToast("Cart cleared", "info", toastId);
           toastIdsRef.current.set(toastId, Date.now());
           setTimeout(() => toastIdsRef.current.delete(toastId), 1000);
         }

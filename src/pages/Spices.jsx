@@ -241,7 +241,7 @@ const Spices = () => {
       image: item.image,
       quantity: 1,
     });
-    showToast(`${item.name} added to cart!`, "success");
+    
   };
 
   const toggleWishlist = (item) => {

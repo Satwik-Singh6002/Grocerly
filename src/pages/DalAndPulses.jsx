@@ -6,7 +6,7 @@ import { Search, Filter, Star, Heart, Shield, Truck } from "lucide-react";
 
 // ----------------- Products Data -----------------
 const dalProducts = [
-  {
+    {
     id: 1,
     name: "Tata Sampann Toor Dal 1kg",
     price: 130,
@@ -264,7 +264,7 @@ const DalAndPulses = () => {
     }
   }, [searchTerm, selectedCategory, sortBy]);
 
-  // Add to Cart
+   // Add to Cart
   const handleAddToCart = (item) => {
     addToCart({
       id: item.id,
@@ -273,7 +273,6 @@ const DalAndPulses = () => {
       image: item.image,
       quantity: 1,
     });
-    showToast(`${item.name} added to cart!`, "success", `cart-${item.id}`);
   };
 
   // Wishlist toggle
@@ -281,10 +280,8 @@ const DalAndPulses = () => {
     const isInWishlist = wishlist.find((w) => w.id === item.id);
     if (isInWishlist) {
       removeFromWishlist(item.id);
-      showToast(`${item.name} removed from wishlist.`, "info", `wishlist-rm-${item.id}`);
     } else {
       addToWishlist(item);
-      showToast(`${item.name} added to wishlist!`, "info", `wishlist-add-${item.id}`);
     }
   };
 

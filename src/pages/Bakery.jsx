@@ -1,3 +1,4 @@
+// src/pages/Bakery.jsx
 import React, { useState, useMemo } from "react";
 import { useCart } from "../context/CartContext";
 import { useToast } from "../context/ToastContext";
@@ -15,7 +16,7 @@ const Bakery = () => {
   const [organicFilter, setOrganicFilter] = useState(false);
 
   const bakeryProducts = [
-    {
+        {
       id: "bak-01",
       name: "Brown Bread",
       image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=500&q=60",
@@ -54,7 +55,123 @@ const Bakery = () => {
       organic: false,
       discount: 14,
     },
-    // ... other products unchanged
+    {
+      id: "bak-04",
+      name: "Blueberry Muffin",
+      image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=500&q=60",
+      price: 50,
+      originalPrice: 55,
+      label: "Sweet & Fruity",
+      rating: 4.5,
+      reviews: 167,
+      category: "Muffin",
+      organic: true,
+      discount: 9,
+    },
+    {
+      id: "bak-05",
+      name: "Cookies Pack",
+      image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=500&q=60",
+      price: 70,
+      originalPrice: 80,
+      label: "Crunchy Delight",
+      rating: 4.3,
+      reviews: 98,
+      category: "Cookies",
+      organic: false,
+      discount: 13,
+    },
+    {
+      id: "bak-06",
+      name: "Danish Pastry",
+      image: "https://images.unsplash.com/photo-1612927601605-ef98b49972d8?auto=format&fit=crop&w=500&q=60",
+      price: 55,
+      originalPrice: 60,
+      label: "Buttery Layers",
+      rating: 4.6,
+      reviews: 132,
+      category: "Pastry",
+      organic: false,
+      discount: 8,
+    },
+    {
+      id: "bak-07",
+      name: "Bagel",
+      image: "https://images.unsplash.com/photo-1586448900407-7397af48d116?auto=format&fit=crop&w=500&q=60",
+      price: 35,
+      originalPrice: 40,
+      label: "Soft & Chewy",
+      rating: 4.1,
+      reviews: 76,
+      category: "Bread",
+      organic: true,
+      discount: 13,
+    },
+    {
+      id: "bak-08",
+      name: "Cupcake",
+      image: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?auto=format&fit=crop&w=500&q=60",
+      price: 45,
+      originalPrice: 50,
+      label: "Colorful Treat",
+      rating: 4.4,
+      reviews: 145,
+      category: "Cake",
+      organic: false,
+      discount: 10,
+    },
+    {
+      id: "bak-09",
+      name: "Whole Wheat Bread",
+      image: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=500&q=60",
+      price: 50,
+      originalPrice: 55,
+      label: "Healthy Choice",
+      rating: 4.0,
+      reviews: 87,
+      category: "Bread",
+      organic: true,
+      discount: 9,
+    },
+    {
+      id: "bak-10",
+      name: "Cinnamon Roll",
+      image: "https://images.unsplash.com/photo-1590083745206-4405e574c4f4?auto=format&fit=crop&w=500&q=60",
+      price: 65,
+      originalPrice: 75,
+      label: "Sweet Spice",
+      rating: 4.9,
+      reviews: 201,
+      category: "Pastry",
+      organic: false,
+      discount: 13,
+    },
+    {
+      id: "bak-11",
+      name: "Sourdough Bread",
+      image: "https://images.unsplash.com/photo-1586448900407-7397af48d116?auto=format&fit=crop&w=500&q=60",
+      price: 80,
+      originalPrice: 90,
+      label: "Artisan",
+      rating: 4.7,
+      reviews: 156,
+      category: "Bread",
+      organic: true,
+      discount: 11,
+    },
+    {
+      id: "bak-12",
+      name: "Fruit Tart",
+      image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=500&q=60",
+      price: 95,
+      originalPrice: 110,
+      label: "Fruity Delight",
+      rating: 4.8,
+      reviews: 178,
+      category: "Pastry",
+      organic: true,
+      discount: 14,
+    },
   ];
 
   const categories = useMemo(
@@ -92,17 +209,15 @@ const Bakery = () => {
       image: item.image,
       quantity: 1,
     });
-    showToast(`${item.name} added to cart!`, "success", `add-to-cart-${item.id}`);
+    // REMOVED the duplicate showToast call here
   };
 
   const toggleWishlist = (item) => {
     const isInWishlist = wishlist.find((w) => w.id === item.id);
     if (isInWishlist) {
       removeFromWishlist(item.id);
-      showToast(`${item.name} removed from wishlist.`, "info", `remove-wishlist-${item.id}`);
     } else {
       addToWishlist(item);
-      showToast(`${item.name} added to wishlist!`, "info", `add-wishlist-${item.id}`);
     }
   };
 
@@ -121,7 +236,7 @@ const Bakery = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-lime-50 py-8 px-4 sm:px-6 lg:px-8">
-      {/* Header Section */}
+      {/* Header */}
       <div className="max-w-7xl mx-auto mb-12 text-center">
         <h1 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-green-600 to-lime-600 bg-clip-text text-transparent">
           Fresh Bakery
@@ -142,6 +257,7 @@ const Bakery = () => {
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
           </div>
+
           <div className="flex flex-wrap gap-3 justify-center">
             <select
               value={selectedCategory}
@@ -154,6 +270,7 @@ const Bakery = () => {
                 </option>
               ))}
             </select>
+
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -165,6 +282,7 @@ const Bakery = () => {
               <option value="rating">Top Rated</option>
               <option value="discount">Best Discount</option>
             </select>
+
             <label className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-2xl cursor-pointer">
               <input
                 type="checkbox"
@@ -201,7 +319,8 @@ const Bakery = () => {
           </div>
         </div>
       </div>
-      {/* Products Grid */}
+
+      {/* Bakery Grid */}
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {filteredProducts.map((item) => {
@@ -211,12 +330,15 @@ const Bakery = () => {
                 key={item.id}
                 className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 group overflow-hidden"
               >
+                {/* Image */}
                 <div className="relative h-48 overflow-hidden">
                   <img
                     src={item.image}
                     alt={item.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
+
+                  {/* Label */}
                   <div className="absolute top-3 left-3 space-y-2">
                     <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-semibold">
                       {item.label}
@@ -227,6 +349,8 @@ const Bakery = () => {
                       </span>
                     )}
                   </div>
+
+                  {/* Wishlist */}
                   <button
                     onClick={() => toggleWishlist(item)}
                     className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-red-50"
@@ -236,24 +360,34 @@ const Bakery = () => {
                       className={isInWishlist ? "text-red-500 fill-current" : "text-gray-400"}
                     />
                   </button>
+
+                  {/* Discount */}
                   {item.discount && (
                     <div className="absolute bottom-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold">
                       {item.discount}% OFF
                     </div>
                   )}
                 </div>
+
+                {/* Info */}
                 <div className="p-6">
                   <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 h-14">{item.name}</h3>
+
+                  {/* Rating */}
                   <div className="flex items-center justify-between mb-3">
                     <StarRating rating={item.rating} />
                     <span className="text-sm text-gray-500">{item.reviews} reviews</span>
                   </div>
+
+                  {/* Price */}
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-2xl font-bold text-green-700">₹{item.price}</span>
                     {item.originalPrice && (
                       <span className="text-lg text-gray-500 line-through">₹{item.originalPrice}</span>
                     )}
                   </div>
+
+                  {/* Cart Button */}
                   <button
                     onClick={() => handleAddToCart(item)}
                     className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
@@ -265,6 +399,7 @@ const Bakery = () => {
             );
           })}
         </div>
+
         {filteredProducts.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No bakery items found. Try a different search.</p>
@@ -272,6 +407,7 @@ const Bakery = () => {
         )}
       </div>
 
+      {/* CSS */}
       <style jsx>{`
         .line-clamp-2 {
           display: -webkit-box;
