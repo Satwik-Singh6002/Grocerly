@@ -1,166 +1,209 @@
 // src/context/ToastContext.jsx
-import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
+import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
 
-const ToastContext = createContext(null);
+const ToastContext = createContext();
 
-export const ToastProvider = ({ children }) => {
-  const [toasts, setToasts] = useState([]);
-  const [headerHeight, setHeaderHeight] = useState(0);
-  const headerRef = useRef(null);
+// Toast component with improved UI and animations
+const Toast = ({ toast, removeToast, pauseTimeout, resumeTimeout }) => {
+  const [isExiting, setIsExiting] = useState(false);
+  const timerRef = useRef(null);
+  const progressRef = useRef(null);
+  
+  const handleClose = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => removeToast(toast.id), 300);
+  }, [removeToast, toast.id]);
 
-  // Measure header height on mount and when toasts change
-  useEffect(() => {
-    const updateHeaderHeight = () => {
-      // Try to find the header element by common class names or IDs
-      const headerSelectors = [
-        'header', 
-        '.header', 
-        '#header', 
-        '[class*="header"]',
-        '[class*="Header"]',
-        'nav',
-        '.nav',
-        '#nav',
-        '[class*="navigation"]'
-      ];
-      
-      let headerElement = null;
-      
-      for (const selector of headerSelectors) {
-        try {
-          const element = document.querySelector(selector);
-          if (element && element.offsetHeight > 0) {
-            headerElement = element;
-            break;
-          }
-        } catch (e) {
-          // Skip invalid selectors
-        }
-      }
-      
-      // If we found a header, use its height plus some padding
-      if (headerElement) {
-        setHeaderHeight(headerElement.offsetHeight + 16);
-      } else {
-        // Fallback: use a reasonable default height (e.g., 64px) plus padding
-        setHeaderHeight(80);
-      }
-    };
-
-    // Initial measurement
-    updateHeaderHeight();
-
-    // Set up a mutation observer to detect changes in the header
-    const observer = new MutationObserver(updateHeaderHeight);
-    observer.observe(document.body, { 
-      childList: true, 
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['class', 'style'] 
-    });
-
-    // Also update on window resize
-    window.addEventListener('resize', updateHeaderHeight);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('resize', updateHeaderHeight);
-    };
-  }, []);
-
-  const showToast = useCallback((message, type = "info", toastId) => {
-    const id = toastId || Date.now();
-    
-    setToasts((prev) => {
-      // Prevent duplicate toasts by toastId
-      if (toastId && prev.some(toast => toast.id === toastId)) {
-        return prev;
-      }
-      
-      // Prevent duplicate toasts by message within 500ms
-      const now = Date.now();
-      const recentDuplicate = prev.find(
-        (toast) => toast.message === message && now - toast.id < 500
-      );
-      
-      if (recentDuplicate) return prev;
-      
-      return [...prev, { id, message, type }];
-    });
-
-    // Auto remove toast after 2 seconds
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 2000);
-  }, []);
-
-  const removeToast = useCallback((id) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  }, []);
-
-  // Toast type styling with Tailwind
-  const getToastStyles = (type) => {
-    const baseStyles = "text-white px-4 py-3 rounded-lg shadow-lg max-w-xs transition-all duration-300 transform";
-    
-    switch (type) {
-      case "success":
-        return `${baseStyles} bg-green-600`;
-      case "error":
-        return `${baseStyles} bg-red-600`;
-      case "warning":
-        return `${baseStyles} bg-yellow-600`;
-      case "info":
-      default:
-        return `${baseStyles} bg-blue-600`;
+  const handleMouseEnter = () => {
+    pauseTimeout(toast.id);
+    if (progressRef.current) {
+      progressRef.current.style.animationPlayState = 'paused';
     }
   };
 
-  return (
-    <ToastContext.Provider value={{ showToast }}>
-      {children}
+  const handleMouseLeave = () => {
+    resumeTimeout(toast.id, handleClose);
+    if (progressRef.current) {
+      progressRef.current.style.animationPlayState = 'running';
+    }
+  };
 
-      {/* ✅ Toast UI Renderer with dynamic positioning based on header height */}
+  // Auto-dismiss after duration
+  React.useEffect(() => {
+    timerRef.current = setTimeout(handleClose, toast.duration);
+    return () => clearTimeout(timerRef.current);
+  }, [handleClose, toast.duration]);
+
+  const getToastIcon = () => {
+    switch (toast.type) {
+      case 'success':
+        return (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+        );
+      case 'error':
+        return (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          </svg>
+        );
+      case 'warning':
+        return (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+          </svg>
+        );
+      default:
+        return (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          </svg>
+        );
+    }
+  };
+
+  const toastStyles = {
+    success: 'bg-green-500 border-green-600',
+    error: 'bg-red-500 border-red-600',
+    warning: 'bg-yellow-500 border-yellow-600',
+    info: 'bg-blue-500 border-blue-600',
+  };
+
+  return (
+    <div
+      role="alert"
+      aria-live="polite"
+      aria-atomic="true"
+      className={`transform transition-all duration-300 ${
+        isExiting ? 'opacity-0 translate-x-full' : 'opacity-100 translate-x-0'
+      }`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className={`flex items-start p-4 rounded-lg shadow-lg border-l-4 min-w-[300px] max-w-md text-white ${toastStyles[toast.type]}`}>
+        <div className="flex-shrink-0 mr-3">
+          {getToastIcon()}
+        </div>
+        <div className="flex-1">
+          <p className="font-medium text-sm">{toast.message}</p>
+        </div>
+        <button
+          onClick={handleClose}
+          className="flex-shrink-0 ml-4 text-white hover:text-white/80 focus:outline-none"
+          aria-label="Close notification"
+        >
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+          </svg>
+        </button>
+      </div>
       <div 
-        className="fixed right-4 space-y-3 z-50"
-        style={{ top: `${headerHeight}px` }}
-        aria-live="polite"
+        ref={progressRef}
+        className={`h-1 mt-1 bg-white/30 rounded-full origin-left ${toast.duration ? 'animate-progress' : ''}`}
+        style={{ animationDuration: `${toast.duration}ms` }}
+      />
+    </div>
+  );
+};
+
+export const ToastProvider = ({ children, position = 'top-right' }) => {
+  const [toasts, setToasts] = useState([]);
+  const timeouts = useRef(new Map());
+
+  const getPositionClass = () => {
+    switch (position) {
+      case 'top-left':
+        return 'top-4 left-4';
+      case 'top-center':
+        return 'top-4 left-1/2 transform -translate-x-1/2';
+      case 'bottom-left':
+        return 'bottom-4 left-4';
+      case 'bottom-right':
+        return 'bottom-4 right-4';
+      case 'bottom-center':
+        return 'bottom-4 left-1/2 transform -translate-x-1/2';
+      default: // top-right
+        return 'top-4 right-4';
+    }
+  };
+
+  const showToast = useCallback((message, type = 'info', duration = 3000) => {
+    const id = Date.now() + Math.random();
+    setToasts(prev => [...prev, { id, message, type, duration }]);
+    
+    // Announce to screen readers
+    if (typeof window !== 'undefined' && window.document) {
+      const ariaLive = document.getElementById('toast-aria-live');
+      if (ariaLive) {
+        ariaLive.textContent = message;
+      }
+    }
+  }, []);
+
+  const removeToast = useCallback((id) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+    // Clear timeout if exists
+    if (timeouts.current.has(id)) {
+      clearTimeout(timeouts.current.get(id));
+      timeouts.current.delete(id);
+    }
+  }, []);
+
+  const pauseTimeout = useCallback((id) => {
+    if (timeouts.current.has(id)) {
+      clearTimeout(timeouts.current.get(id));
+      timeouts.current.delete(id);
+    }
+  }, []);
+
+  const resumeTimeout = useCallback((id, callback) => {
+    const toast = toasts.find(t => t.id === id);
+    if (toast && toast.duration) {
+      const timeoutId = setTimeout(callback, toast.duration);
+      timeouts.current.set(id, timeoutId);
+    }
+  }, [toasts]);
+
+  const value = {
+    showToast,
+    removeToast,
+    pauseTimeout,
+    resumeTimeout
+  };
+
+  return (
+    <ToastContext.Provider value={value}>
+      {children}
+      
+      {/* ARIA live region for screen readers */}
+      <div
+        id="toast-aria-live"
+        aria-live="assertive"
         aria-atomic="true"
-      >
+        className="sr-only"
+      />
+      
+      {/* Toast container */}
+      <div className={`fixed z-50 flex flex-col gap-3 ${getPositionClass()}`}>
         {toasts.map((toast) => (
-          <div
+          <Toast
             key={toast.id}
-            className={`${getToastStyles(toast.type)} animate-slide-in-right`}
-            role="alert"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">{toast.message}</span>
-              <button
-                onClick={() => removeToast(toast.id)}
-                className="ml-4 text-white hover:text-gray-200 focus:outline-none text-lg font-bold transition-colors duration-200"
-                aria-label="Close toast"
-              >
-                ×
-              </button>
-            </div>
-            
-            {/* Progress bar for visual countdown */}
-            <div className="w-full bg-white bg-opacity-30 h-1 mt-2 rounded-full overflow-hidden">
-              <div 
-                className="bg-white h-1 rounded-full animate-toast-progress"
-              />
-            </div>
-          </div>
+            toast={toast}
+            removeToast={removeToast}
+            pauseTimeout={pauseTimeout}
+            resumeTimeout={resumeTimeout}
+          />
         ))}
       </div>
     </ToastContext.Provider>
   );
 };
 
-// ✅ Safe custom hook
 export const useToast = () => {
   const context = useContext(ToastContext);
   if (!context) {
-    throw new Error("useToast must be used within a ToastProvider");
+    throw new Error('useToast must be used within a ToastProvider');
   }
   return context;
 };

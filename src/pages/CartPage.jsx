@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import CartItem from "../components/Cart/CartItem";
-import { Trash2 } from "lucide-react";
+import { Trash2, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { toast } from "react-hot-toast"; // ✅ switched to react-hot-toast
+import { useToast } from "../context/ToastContext";
 
 const CartPage = () => {
   const { cartItems, clearCart } = useCart();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [confirmClear, setConfirmClear] = useState(false);
 
@@ -14,7 +15,7 @@ const CartPage = () => {
     if (cartItems.length > 0) {
       navigate("/checkout");
     } else {
-      toast.error("Your cart is empty!"); // ✅ unified notification
+      showToast("Your cart is empty!", "error");
     }
   };
 
@@ -28,7 +29,6 @@ const CartPage = () => {
 
   const handleClearCart = () => {
     clearCart(true);
-    toast.success("Cart cleared successfully!"); // ✅ unified notification
     setConfirmClear(false);
   };
 
@@ -94,7 +94,16 @@ const CartPage = () => {
           </button>
         </>
       ) : (
-        <p className="text-gray-600">Your cart is empty.</p>
+        <div className="text-center py-10">
+          <p className="text-gray-600 mb-4">Your cart is empty.</p>
+          <button
+            onClick={() => navigate("/")}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 mx-auto"
+          >
+            <ArrowLeft size={18} />
+            Continue Shopping
+          </button>
+        </div>
       )}
     </div>
   );

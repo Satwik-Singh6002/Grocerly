@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { ChevronLeft, ChevronRight, Star, Heart, Zap, Plus, Minus, ShoppingCart } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, Heart, Zap, Plus, Minus, ShoppingCart, Trash2 } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import toast from "react-hot-toast";
 
@@ -73,9 +73,12 @@ function PrevArrow({ onClick }) {
     <div
       className="absolute top-1/2 -left-3 sm:-left-4 z-20 transform -translate-y-1/2 cursor-pointer bg-white shadow-xl rounded-full p-2 sm:p-3 hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-110 group"
       onClick={onClick}
+      role="button"
+      aria-label="Previous products"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && onClick()}
     >
       <ChevronLeft size={24} className="group-hover:animate-pulse" />
-      <span className="sr-only">Previous products</span>
     </div>
   );
 }
@@ -85,26 +88,34 @@ function NextArrow({ onClick }) {
     <div
       className="absolute top-1/2 -right-3 sm:-right-4 z-20 transform -translate-y-1/2 cursor-pointer bg-white shadow-xl rounded-full p-2 sm:p-3 hover:bg-green-600 hover:text-white transition-all duration-300 hover:scale-110 group"
       onClick={onClick}
+      role="button"
+      aria-label="Next products"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && onClick()}
     >
       <ChevronRight size={24} className="group-hover:animate-pulse" />
-      <span className="sr-only">Next products</span>
     </div>
   );
 }
 
 const FeaturedProducts = () => {
-  const { addToCart, cartItems, increaseQuantity, decreaseQuantity } = useCart();
+  const { addToCart, cartItems, increaseQuantity, decreaseQuantity, removeFromCart } = useCart();
   const [wishlist, setWishlist] = useState([]);
+  const [animatingProduct, setAnimatingProduct] = useState(null);
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = useCallback((product) => {
     addToCart(product, 1);
+    setAnimatingProduct(product.id);
     toast.success(`${product.name} added to cart!`, {
       icon: "🛒",
       style: { borderRadius: "12px", background: "#10b981", color: "#fff" }
     });
-  };
+    
+    // Reset animation after 500ms
+    setTimeout(() => setAnimatingProduct(null), 500);
+  }, [addToCart]);
 
-  const handleIncreaseQuantity = (productId, productName) => {
+  const handleIncreaseQuantity = useCallback((productId, productName) => {
     const cartItem = cartItems.find((item) => item.id === productId);
     if (cartItem) {
       increaseQuantity(productId, productName);
@@ -114,15 +125,14 @@ const FeaturedProducts = () => {
         duration: 1500
       });
     } else {
-      // This shouldn't happen with the fixed increaseQuantity, but as a fallback
       const product = featuredProducts.find(p => p.id === productId);
       if (product) {
         handleAddToCart(product);
       }
     }
-  };
+  }, [cartItems, increaseQuantity, handleAddToCart]);
 
-  const handleDecreaseQuantity = (productId, productName) => {
+  const handleDecreaseQuantity = useCallback((productId, productName) => {
     const cartItem = cartItems.find((item) => item.id === productId);
     if (cartItem && cartItem.quantity > 1) {
       decreaseQuantity(productId, productName);
@@ -132,16 +142,16 @@ const FeaturedProducts = () => {
         duration: 1500
       });
     } else if (cartItem && cartItem.quantity === 1) {
-      // Don't decrease below 1, show warning
-      toast.error("Quantity cannot be less than 1", {
-        icon: "⚠️",
-        style: { borderRadius: "12px", background: "#ef4444", color: "#fff" },
-        duration: 1500
+      // Allow removal from cart when quantity is 1
+      removeFromCart(productId);
+      toast("Removed from cart", { 
+        icon: "🗑️",
+        style: { borderRadius: "12px", background: "#ef4444", color: "#fff" }
       });
     }
-  };
+  }, [cartItems, decreaseQuantity, removeFromCart]);
 
-  const toggleWishlist = (productId, productName) => {
+  const toggleWishlist = useCallback((productId, productName) => {
     if (wishlist.includes(productId)) {
       setWishlist(wishlist.filter((id) => id !== productId));
       toast("Removed from wishlist", { icon: "💔" });
@@ -149,7 +159,7 @@ const FeaturedProducts = () => {
       setWishlist([...wishlist, productId]);
       toast.success(`${productName} added to wishlist!`, { icon: "❤️" });
     }
-  };
+  }, [wishlist]);
 
   const settings = {
     dots: true,
@@ -177,7 +187,7 @@ const FeaturedProducts = () => {
     )
   };
 
-  const renderStars = (rating) => {
+  const renderStars = useCallback((rating) => {
     return Array.from({ length: 5 }).map((_, index) => (
       <Star
         key={index}
@@ -189,7 +199,7 @@ const FeaturedProducts = () => {
         }
       />
     ));
-  };
+  }, []);
 
   return (
     <section className="py-12 sm:py-16 bg-gradient-to-b from-green-25 to-white relative overflow-hidden">
@@ -214,6 +224,7 @@ const FeaturedProducts = () => {
             {featuredProducts.map((product) => {
               const cartItem = cartItems.find((item) => item.id === product.id);
               const currentQuantity = cartItem ? cartItem.quantity : 0;
+              const isInWishlist = wishlist.includes(product.id);
 
               return (
                 <div key={product.id} className="px-3 sm:px-4 focus:outline-none">
@@ -233,15 +244,16 @@ const FeaturedProducts = () => {
                     {/* Wishlist */}
                     <button
                       onClick={() => toggleWishlist(product.id, product.name)}
-                      className="absolute top-4 right-4 p-2 rounded-full bg-white shadow-sm hover:shadow-md transition-all duration-300 z-10"
+                      className={`absolute top-4 right-4 p-2 rounded-full shadow-sm transition-all duration-300 z-10 ${
+                        isInWishlist 
+                          ? "bg-red-100 text-red-500 shadow-md" 
+                          : "bg-white text-gray-400 hover:shadow-md"
+                      }`}
+                      aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
                     >
                       <Heart
                         size={18}
-                        className={
-                          wishlist.includes(product.id)
-                            ? "text-red-500 fill-red-500"
-                            : "text-gray-400"
-                        }
+                        className={isInWishlist ? "fill-current" : ""}
                       />
                     </button>
 
@@ -289,32 +301,43 @@ const FeaturedProducts = () => {
 
                     {/* Quantity + Cart */}
                     <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center border border-green-300 rounded-full overflow-hidden">
-                        <button
-                          onClick={() => handleDecreaseQuantity(product.id, product.name)}
-                          className="p-2 text-green-700 hover:bg-green-100 transition-colors"
-                        >
-                          <Minus size={16} />
-                        </button>
-                        <span className="px-3 py-1 text-sm font-medium text-gray-800">
-                          {currentQuantity}
-                        </span>
-                        <button
-                          onClick={() => handleIncreaseQuantity(product.id, product.name)}
-                          className="p-2 text-green-700 hover:bg-green-100 transition-colors"
-                        >
-                          <Plus size={16} />
-                        </button>
-                      </div>
+                      {currentQuantity > 0 ? (
+                        <div className="flex items-center border border-green-300 rounded-full overflow-hidden bg-green-50">
+                          <button
+                            onClick={() => handleDecreaseQuantity(product.id, product.name)}
+                            className="p-2 text-green-700 hover:bg-green-200 transition-colors"
+                            aria-label="Decrease quantity"
+                          >
+                            {currentQuantity === 1 ? <Trash2 size={14} /> : <Minus size={16} />}
+                          </button>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-800 min-w-[2rem]">
+                            {currentQuantity}
+                          </span>
+                          <button
+                            onClick={() => handleIncreaseQuantity(product.id, product.name)}
+                            className="p-2 text-green-700 hover:bg-green-200 transition-colors"
+                            aria-label="Increase quantity"
+                          >
+                            <Plus size={16} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="w-10"></div> // Spacer to maintain alignment
+                      )}
 
                       <button
                         onClick={() => handleAddToCart(product)}
-                        className="flex items-center justify-center bg-green-600 text-white rounded-full p-3 hover:bg-green-700 shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative"
+                        className={`flex items-center justify-center rounded-full p-3 shadow-md transition-all duration-300 transform ${
+                          currentQuantity > 0
+                            ? "bg-green-700 text-white hover:bg-green-800 hover:shadow-lg"
+                            : "bg-green-600 text-white hover:bg-green-700 hover:shadow-lg hover:scale-105"
+                        } ${animatingProduct === product.id ? 'animate-bounce' : ''}`}
+                        aria-label="Add to cart"
                       >
                         <ShoppingCart size={18} />
-                        {cartItem && (
+                        {currentQuantity > 0 && (
                           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                            {cartItem.quantity}
+                            {currentQuantity}
                           </span>
                         )}
                       </button>
@@ -330,4 +353,4 @@ const FeaturedProducts = () => {
   );
 };
 
-export default FeaturedProducts;
+export default React.memo(FeaturedProducts);
