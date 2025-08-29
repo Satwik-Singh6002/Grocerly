@@ -4,9 +4,10 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 
 // Context & Notifications
 import { WishlistProvider } from "./context/WishlistContext";
-import { CartProvider } from "./context/CartContext"; // ✅ import your CartProvider
+import { CartProvider } from "./context/CartContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AdminDashboard from "./pages/AdminDashboard";
 
 // Components
 import Header from "./components/Header";
@@ -37,15 +38,23 @@ import OrderTracking from "./pages/OrderTracking";
 import Wishlist from "./pages/Wishlist";
 import AdminSignin from "./pages/AdminSignin";
 
-function AppWrapper() {
+function AppContent() {
   const location = useLocation();
-  const hideHeaderRoutes = ["/login", "/signup", "/adminsignin"];
+  const hideHeaderRoutes = [
+    "/login", 
+    "/signup", 
+    "/adminsignin", 
+    "/admin", 
+    "/admin/login",
+    "/admin-dashboard"
+  ];
   const shouldHideHeader = hideHeaderRoutes.includes(location.pathname);
 
   return (
     <>
       {!shouldHideHeader && <Header />}
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/dal-pulses" element={<DalAndPulses />} />
         <Route path="/atta-flour" element={<AttaAndFlour />} />
@@ -67,9 +76,19 @@ function AppWrapper() {
         <Route path="/order-tracking" element={<OrderTracking />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/adminsignin" element={<AdminSignin />} />
+        
+        {/* Auth Routes */}
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<Signup />} />
+        
+        {/* Admin Routes - Multiple paths for flexibility */}
+        <Route path="/adminsignin" element={<AdminSignin />} />
+      
+        
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        
+        {/* Catch-all route for 404 pages */}
+        <Route path="*" element={<div>Page Not Found</div>} />
       </Routes>
     </>
   );
@@ -78,9 +97,9 @@ function AppWrapper() {
 export default function App() {
   return (
     <WishlistProvider>
-      <CartProvider> {/* ✅ wrap here */}
+      <CartProvider>
         <Router>
-          <AppWrapper />
+          <AppContent />
           <ToastContainer position="top-right" autoClose={2000} />
         </Router>
       </CartProvider>

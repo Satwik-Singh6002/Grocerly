@@ -7,23 +7,25 @@ const AdminSignIn = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    if (!email || !password) {
-      setError("Please enter both email and password.");
-      return;
-    }
+  if (!email || !password) {
+    setError("Please enter both email and password.");
+    return;
+  }
 
-    setError("");
+  setError("");
 
-    if (email === "admin@example.com" && password === "admin123") {
-      alert("Admin logged in successfully!");
-      navigate("/admin-dashboard"); // redirect after login
-    } else {
-      setError("Invalid email or password");
-    }
-  };
+  if (email === "admin@example.com" && password === "admin123") {
+    // Set authentication in localStorage
+    localStorage.setItem('adminAuth', 'true');
+    alert("Admin logged in successfully!");
+    navigate("/admin-dashboard"); // redirect after login
+  } else {
+    setError("Invalid email or password");
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">

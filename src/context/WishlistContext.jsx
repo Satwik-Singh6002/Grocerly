@@ -25,9 +25,19 @@ export const WishlistProvider = ({ children }) => {
     }
   };
 
+  // NEW: Toggle function that handles both adding and removing
+  const toggleWishlist = (item) => {
+    const alreadyInWishlist = wishlist.find((w) => w.id === item.id);
+    if (alreadyInWishlist) {
+      removeFromWishlist(item.id);
+    } else {
+      addToWishlist(item);
+    }
+  };
+
   return (
     <WishlistContext.Provider
-      value={{ wishlist, addToWishlist, removeFromWishlist }}
+      value={{ wishlist, addToWishlist, removeFromWishlist, toggleWishlist }} // Added toggleWishlist
     >
       {children}
     </WishlistContext.Provider>
