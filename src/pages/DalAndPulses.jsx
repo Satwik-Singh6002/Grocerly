@@ -449,8 +449,68 @@ const DalAndPulses = () => {
         tags: ["Premium"],
         description: "Premium chana dal for delicious recipes",
         stock: 12
-      }
-    ],
+      },
+{
+  id: 29,
+  name: "24 Mantra Organic Toor Dal 500g",
+  price: 85,
+  originalPrice: 95,
+  rating: 4.6,
+  reviews: 120,
+  imageUrl: "https://www.jiomart.com/images/product/original/491695681/24-mantra-organic-toor-dal-500g.jpg",
+  category: "Toor Dal",
+  organic: true,
+  discount: 11,
+  tags: ["Organic", "Small Pack"],
+  description: "Organic toor dal in convenient 500g pack",
+  stock: 15
+},
+{
+  id: 30,
+  name: "Organic Tattva Masoor Dal 500g",
+  price: 75,
+  originalPrice: 85,
+  rating: 4.5,
+  reviews: 95,
+  imageUrl: "https://www.bbassets.com/media/uploads/p/l/40293671_1-organic-tattva-masoor-dal.jpg",
+  category: "Masoor Dal",
+  organic: true,
+  discount: 12,
+  tags: ["Organic", "Small Pack"],
+  description: "Organic masoor dal in convenient 500g pack",
+  stock: 10
+},
+{
+  id: 31,
+  name: "Fortune Urad Dal 500g",
+  price: 60,
+  originalPrice: 70,
+  rating: 4.3,
+  reviews: 110,
+  imageUrl: "https://m.media-amazon.com/images/I/71X1D3pL2kL.jpg",
+  category: "Urad Dal",
+  organic: false,
+  discount: 14,
+  tags: ["Budget", "Small Pack"],
+  description: "Economical urad dal in 500g pack",
+  stock: 18
+},
+{
+  id: 32,
+  name: "Tata Sampann Moong Dal 500g",
+  price: 65,
+  originalPrice: 75,
+  rating: 4.4,
+  reviews: 130,
+  imageUrl: "https://www.jiomart.com/images/product/original/490000186/tata-sampann-unpolished-moong-dal-500-g.jpg",
+  category: "Moong Dal",
+  organic: false,
+  discount: 13,
+  tags: ["Bestseller", "Small Pack"],
+  description: "Premium moong dal in convenient 500g pack",
+  stock: 12
+}
+ ],
     []
   );
 

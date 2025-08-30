@@ -14,7 +14,7 @@ const Snacks = () => {
   const [sortOption, setSortOption] = useState("Featured");
   const [showFilters, setShowFilters] = useState(false);
   const [showMoreFilters, setShowMoreFilters] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 100]);
+  const [priceRange, setPriceRange] = useState([0, 250]); // Increased max price to 250
   const [minRating, setMinRating] = useState(0);
   const [animatingProduct, setAnimatingProduct] = useState(null);
   const timeoutRef = useRef(null);
@@ -238,7 +238,215 @@ const Snacks = () => {
         tags: ["Imported"],
         description: "Soft sponge cake with cream filling",
         stock: 6
-      }
+      },
+     {
+      id: "snack-17",
+      name: "Munch Chocolate 22g",
+      image: "https://m.media-amazon.com/images/I/61q1q3QJQ+L.jpg",
+      price: 10,
+      originalPrice: 12,
+      rating: 4.3,
+      reviews: 210,
+      category: "Chocolates",
+      tags: ["Chocolate"],
+      description: "Crispy wafer with chocolate coating",
+      stock: 18
+    },
+    {
+      id: "snack-18",
+      name: "Dairy Milk Silk 60g",
+      image: "https://m.media-amazon.com/images/I/71hxN2dG8JL._SL1500_.jpg",
+      price: 70,
+      originalPrice: 85,
+      rating: 4.9,
+      reviews: 950,
+      category: "Chocolates",
+      tags: ["Premium"],
+      description: "Smooth and creamy chocolate bar",
+      stock: 10
+    },
+    {
+      id: "snack-19",
+      name: "Cheetos Crunchy 60g",
+      image: "https://m.media-amazon.com/images/I/71U3T0bC6tL.jpg",
+      price: 25,
+      originalPrice: 30,
+      rating: 4.4,
+      reviews: 320,
+      category: "Chips & Namkeen",
+      tags: ["Cheesy"],
+      description: "Cheesy crunchy snacks",
+      stock: 15
+    },
+    {
+      id: "snack-20",
+      name: "KitKat 4 Finger 41.5g",
+      image: "https://m.media-amazon.com/images/I/71xMKLN5j+L._SL1500_.jpg",
+      price: 35,
+      originalPrice: 40,
+      rating: 4.7,
+      reviews: 680,
+      category: "Chocolates",
+      tags: ["Crispy"],
+      description: "Crispy wafer fingers covered in chocolate",
+      stock: 12
+    },
+    {
+      id: "snack-21",
+      name: "Bourbon Chocolate Cream 150g",
+      image: "https://m.media-amazon.com/images/I/71LZQn7N3PL._SL1500_.jpg",
+      price: 40,
+      originalPrice: 50,
+      rating: 4.6,
+      reviews: 450,
+      category: "Biscuits",
+      tags: ["Chocolatey"],
+      description: "Chocolate cream filled biscuits",
+      stock: 8
+    },
+    {
+      id: "snack-22",
+      name: "Haldiram's Kaju Katli 200g",
+      image: "https://m.media-amazon.com/images/I/71z3RrR2nIL._SL1500_.jpg",
+      price: 199,
+      originalPrice: 249,
+      rating: 4.8,
+      reviews: 520,
+      category: "Sweets",
+      tags: ["Premium"],
+      description: "Traditional Indian cashew sweet",
+      stock: 6
+    },
+    {
+      id: "snack-23",
+      name: "Pringles Sour Cream & Onion 107g",
+      image: "https://m.media-amazon.com/images/I/81-8+9R4Y4L._SL1500_.jpg",
+      price: 99,
+      originalPrice: 120,
+      rating: 4.7,
+      reviews: 610,
+      category: "Chips & Namkeen",
+      tags: ["Tangy"],
+      description: "Stackable crisps with sour cream flavor",
+      stock: 11
+    },
+    {
+      id: "snack-24",
+      name: "Amul Dark Chocolate 60g",
+      image: "https://m.media-amazon.com/images/I/71Q0N0K5JQL._SL1500_.jpg",
+      price: 65,
+      originalPrice: 75,
+      rating: 4.5,
+      reviews: 380,
+      category: "Chocolates",
+      tags: ["Dark Chocolate"],
+      description: "Rich dark chocolate with intense flavor",
+      stock: 9
+    },
+    {
+      id: "snack-25",
+      name: "Lotte Choco Pie 6 Pieces",
+      image: "https://m.media-amazon.com/images/I/71z9i9K3TPL._SL1500_.jpg",
+      price: 89,
+      originalPrice: 99,
+      rating: 4.6,
+      reviews: 420,
+      category: "Cakes",
+      tags: ["Imported"],
+      description: "Chocolate covered marshmallow cakes",
+      stock: 7
+    },
+    {
+      id: "snack-26",
+      name: "Bikanerview Bhujia 400g",
+      image: "https://m.media-amazon.com/images/I/71w6J4L3l+L._SL1500_.jpg",
+      price: 85,
+      originalPrice: 95,
+      rating: 4.4,
+      reviews: 350,
+      category: "Namkeen",
+      tags: ["Traditional"],
+      description: "Classic spicy snack from Bikaner",
+      stock: 14
+    },
+    {
+      id: "snack-27",
+      name: "Cornitos Nacho Crisps 75g",
+      image: "https://m.media-amazon.com/images/I/61dPlVr0YCL._SL1000_.jpg",
+      price: 55,
+      originalPrice: 65,
+      rating: 4.5,
+      reviews: 290,
+      category: "Nachos",
+      tags: ["Cheesy"],
+      description: "Baked nacho crisps with cheese seasoning",
+      stock: 13
+    },
+    {
+      id: "snack-28",
+      name: "Ferrero Rocher 3 Pieces",
+      image: "https://m.media-amazon.com/images/I/71pZQrH-MIL._SL1500_.jpg",
+      price: 99,
+      originalPrice: 120,
+      rating: 4.9,
+      reviews: 890,
+      category: "Chocolates",
+      tags: ["Premium"],
+      description: "Hazelnut chocolates in gold wrapper",
+      stock: 5
+    },
+    {
+      id: "snack-29",
+      name: "McVitie's Digestive 250g",
+      image: "https://m.media-amazon.com/images/I/81L9Fh6X4RL._SL1500_.jpg",
+      price: 75,
+      originalPrice: 85,
+      rating: 4.6,
+      reviews: 510,
+      category: "Biscuits",
+      tags: ["Whole Wheat"],
+      description: "Whole wheat digestive biscuits",
+      stock: 10
+    },
+    {
+      id: "snack-30",
+      name: "Yippee Noodle Magic Masala 70g",
+      image: "https://m.media-amazon.com/images/I/71UySH5U2tL._SL1500_.jpg",
+      price: 15,
+      originalPrice: 18,
+      rating: 4.3,
+      reviews: 230,
+      category: "Instant Noodles",
+      tags: ["Spicy"],
+      description: "Instant noodles with magic masala taste",
+      stock: 20
+    },
+    {
+      id: "snack-31",
+      name: "Toblerone Milk Chocolate 100g",
+      image: "https://m.media-amazon.com/images/I/71Mhlti+6+L._SL1500_.jpg",
+      price: 199,
+      originalPrice: 249,
+      rating: 4.8,
+      reviews: 670,
+      category: "Chocolates",
+      tags: ["Swiss"],
+      description: "Swiss milk chocolate with honey and almond",
+      stock: 8
+    },
+    {
+      id: "snack-32",
+      name: "Kellogg's Chocos 150g",
+      image: "https://m.media-amazon.com/images/I/61j8lW8vN2L._SL1000_.jpg",
+      price: 85,
+      originalPrice: 99,
+      rating: 4.4,
+      reviews: 380,
+      category: "Cereals",
+      tags: ["Chocolate"],
+      description: "Chocolate flavored cereal rings",
+      stock: 12
+    }
     ],
     []
   );
@@ -395,7 +603,7 @@ const Snacks = () => {
   // Reset all filters
   const resetFilters = () => {
     setCategoryFilter("All");
-    setPriceRange([0, 100]);
+    setPriceRange([0, 250]); // Reset to new max price
     setMinRating(0);
     setSearchTerm("");
   };
@@ -530,28 +738,28 @@ const Snacks = () => {
               <input
                 type="range"
                 min="0"
-                max="100"
+                max="250" // Increased max to 250
                 step="5"
                 value={priceRange[0]}
                 onChange={(e) => setPriceRange([parseInt(e.target.value), priceRange[1]])}
                 className="w-full h-2 bg-amber-200 rounded-lg appearance-none cursor-pointer"
                 aria-valuemin={0}
-                aria-valuemax={100}
+                aria-valuemax={250}
                 aria-valuenow={priceRange[0]}
               />
               <input
                 type="range"
                 min="0"
-                max="100"
+                max="250" // Increased max to 250
                 step="5"
                 value={priceRange[1]}
                 onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
                 className="w-full h-2 bg-amber-200 rounded-lg appearance-none cursor-pointer"
                 aria-valuemin={0}
-                aria-valuemax={100}
+                aria-valuemax={250}
                 aria-valuenow={priceRange[1]}
               />
-              <span className="text-xs text-gray-500">100</span>
+              <span className="text-xs text-gray-500">250</span> {/* Updated to 250 */}
             </div>
           </div>
 

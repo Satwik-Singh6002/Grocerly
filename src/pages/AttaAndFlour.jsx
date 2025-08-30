@@ -14,7 +14,7 @@ const AttaAndFlour = () => {
   const [sortOption, setSortOption] = useState("Featured");
   const [showFilters, setShowFilters] = useState(false);
   const [showMoreFilters, setShowMoreFilters] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [priceRange, setPriceRange] = useState([0, 1500]);
   const [animatingProduct, setAnimatingProduct] = useState(null);
   const timeoutRef = useRef(null);
 
@@ -27,7 +27,7 @@ const AttaAndFlour = () => {
     };
   }, []);
 
-  // Products data - 24 atta and flour products
+  // Products data - 32 atta and flour products
   const products = useMemo(
     () => [
       {
@@ -389,6 +389,127 @@ const AttaAndFlour = () => {
         tags: ["Protein Rich"],
         description: "High-protein soya flour for healthy recipes",
         stock: 7
+      },
+      // Additional 8 products to make it 32
+      {
+        id: 25,
+        name: "Buckwheat Flour 500g",
+        price: 140,
+        originalPrice: 160,
+        rating: 4.6,
+        reviews: 89,
+        imageUrl: "https://www.bigbasket.com/media/uploads/p/l/40000281_8-buckwheat-flour.jpg",
+        category: "Specialty Flour",
+        organic: true,
+        discount: 12,
+        tags: ["Gluten Free", "Healthy"],
+        description: "Nutrient-dense buckwheat flour for pancakes and baking",
+        stock: 5
+      },
+      {
+        id: 26,
+        name: "Organic Amaranth Flour 500g",
+        price: 150,
+        originalPrice: 180,
+        rating: 4.7,
+        reviews: 67,
+        imageUrl: "https://www.bigbasket.com/media/uploads/p/l/40000282_7-organic-amaranth-flour.jpg",
+        category: "Organic Flour",
+        organic: true,
+        discount: 17,
+        tags: ["Gluten Free", "Superfood"],
+        description: "Ancient grain flour packed with protein and nutrients",
+        stock: 4
+      },
+      {
+        id: 27,
+        name: "Quinoa Flour 500g",
+        price: 220,
+        originalPrice: 250,
+        rating: 4.8,
+        reviews: 112,
+        imageUrl: "https://www.bigbasket.com/media/uploads/p/l/40000283_7-quinoa-flour.jpg",
+        category: "Premium Flour",
+        organic: true,
+        discount: 12,
+        tags: ["Protein Rich", "Gluten Free"],
+        description: "High-protein quinoa flour for gluten-free baking",
+        stock: 6
+      },
+      {
+        id: 28,
+        name: "Almond Flour 500g",
+        price: 350,
+        originalPrice: 400,
+        rating: 4.9,
+        reviews: 203,
+        imageUrl: "https://www.bigbasket.com/media/uploads/p/l/40000284_7-almond-flour.jpg",
+        category: "Premium Flour",
+        organic: false,
+        discount: 13,
+        tags: ["Keto Friendly", "Low Carb"],
+        description: "Finely ground almond flour for keto and low-carb recipes",
+        stock: 8
+      },
+      {
+        id: 29,
+        name: "Coconut Flour 500g",
+        price: 280,
+        originalPrice: 320,
+        rating: 4.5,
+        reviews: 145,
+        imageUrl: "https://www.bigbasket.com/media/uploads/p/l/40000285_7-coconut-flour.jpg",
+        category: "Specialty Flour",
+        organic: true,
+        discount: 12,
+        tags: ["Gluten Free", "High Fiber"],
+        description: "Nutritious coconut flour for gluten-free baking",
+        stock: 7
+      },
+      {
+        id: 30,
+        name: "Organic Chickpea Flour 1kg",
+        price: 160,
+        originalPrice: 190,
+        rating: 4.6,
+        reviews: 98,
+        imageUrl: "https://www.bigbasket.com/media/uploads/p/l/40000286_7-organic-chickpea-flour.jpg",
+        category: "Organic Flour",
+        organic: true,
+        discount: 16,
+        tags: ["Protein Rich", "Versatile"],
+        description: "Certified organic chickpea flour for healthy cooking",
+        stock: 9
+      },
+      {
+        id: 31,
+        name: "Millet Mix Flour 1kg",
+        price: 180,
+        originalPrice: 210,
+        rating: 4.4,
+        reviews: 124,
+        imageUrl: "https://www.bigbasket.com/media/uploads/p/l/40000287_7-millet-mix-flour.jpg",
+        category: "Specialty Flour",
+        organic: false,
+        discount: 14,
+        tags: ["Multigrain", "Healthy"],
+        description: "Blend of various millet flours for nutritious rotis",
+        stock: 11
+      },
+      {
+        id: 32,
+        name: "Organic Spelt Flour 1kg",
+        price: 320,
+        originalPrice: 360,
+        rating: 4.7,
+        reviews: 87,
+        imageUrl: "https://www.bigbasket.com/media/uploads/p/l/40000288_7-organic-spelt-flour.jpg",
+        category: "Organic Flour",
+        organic: true,
+        discount: 11,
+        tags: ["Ancient Grain", "Nutritious"],
+        description: "Ancient grain flour with a nutty flavor and high nutrition",
+        stock: 5
       }
     ],
     []
@@ -541,7 +662,7 @@ const AttaAndFlour = () => {
   // Reset all filters
   const resetFilters = () => {
     setCategoryFilter("All");
-    setPriceRange([0, 1000]);
+    setPriceRange([0, 1500]);
     setSearchTerm("");
   };
 
@@ -675,28 +796,28 @@ const AttaAndFlour = () => {
               <input
                 type="range"
                 min="0"
-                max="1000"
+                max="1500"
                 step="50"
                 value={priceRange[0]}
                 onChange={(e) => setPriceRange([parseInt(e.target.value), priceRange[1]])}
                 className="w-full h-2 bg-amber-200 rounded-lg appearance-none cursor-pointer"
                 aria-valuemin={0}
-                aria-valuemax={1000}
+                aria-valuemax={1500}
                 aria-valuenow={priceRange[0]}
               />
               <input
                 type="range"
                 min="0"
-                max="1000"
+                max="1500"
                 step="50"
                 value={priceRange[1]}
                 onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
                 className="w-full h-2 bg-amber-200 rounded-lg appearance-none cursor-pointer"
                 aria-valuemin={0}
-                aria-valuemax={1000}
+                aria-valuemax={1500}
                 aria-valuenow={priceRange[1]}
               />
-              <span className="text-xs text-gray-500">1000</span>
+              <span className="text-xs text-gray-500">1500</span>
             </div>
           </div>
 
